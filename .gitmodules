@@ -1,0 +1,3 @@
+[submodule "grouppy"]
+	path = grouppy
+	url = https://github.com/TheKrafter/GroupPy.git
