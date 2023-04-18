@@ -1,7 +1,11 @@
+import sys
 import gi
-gi.require_version("Gtk", "4.0")
-from gi.repository import Gtk, Gio, GLib
-from groupme_client_lib import GroupMeClient
+from gi.repository import Gtk, Gio, GLib, Adw
+
+gi.require_version('Gtk', '4.0')
+gi.require_version('Adw', '1')
+
+from grouppy import GroupMeClient, GroupMeListener
 
 class GroupMeChatWindow(Gtk.ApplicationWindow):
     def __init__(self, app):
@@ -89,3 +93,15 @@ class GroupMeChatWindow(Gtk.ApplicationWindow):
     def fetch_messages(self, listbox, row):
         # Fetch the messages for the selected group
         group_id = row.get_index()
+
+class App(Adw.Application):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.connect('activate', self.on_activate)
+
+    def on_activate(self, app):
+        self.win = MainWindow(application=app)
+        self.win.present()
+
+app = App(application_id="com.github.thekrafter.Groupings")
+app.run(sys.argv)
