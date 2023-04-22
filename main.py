@@ -1,9 +1,18 @@
 """ A GTK4/Libadwaita GroupMe Client using the GroupyAPI Library """
+
+from logging42 import logger
+
 import sys
+import os
+import time
+
 import gi
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
 from gi.repository import Gtk, Adw
+
+import groupy.client import Client
+import keyring
 
 
 class MainWindow(Gtk.ApplicationWindow):
@@ -11,10 +20,75 @@ class MainWindow(Gtk.ApplicationWindow):
         super().__init__(*args, **kwargs)
         
         self.set_title("Groupings")
+        self.client_id = "BNDU2FYRc9qOJOenhpVYB3SpIIPr7PJE8PNzBkriPOxiFw3Z"
 
-        
+        logger.info(f'Fetching access token for {os.environ["USER"]}...')
+        # Fetch Keyring
+        keyring.get_keyring()
+        self.access_token = keyring.get_password("io.github.thekrafter.Groupings", os.environ["USER"])
+        if self.access_token == None:
+            # Get Access Token if it Doesn't Exist
+            # ------------------------------------
+            # 1. Sends the user to the OAuth URL in their browser
+            # 2. Sets up a flask server to accept the callback
+            # 3. Gets the token from the passed 'access_token' argument, saving to to the keyring
+            # 4. Waits for the value to be in the keyring
+            # 5. Closes the webserver and continues
 
+            import webbrowser
+            from flask import Flask, request
+            from multiprocessing import Process
+            
+            # Open in Browser
+            webbrowser.open(f'https://oauth.groupme.com/oauth/authorize?client_id={self.client_id}')
+
+            # Define Webserver
+            html_success_page = f"""
+            <!DOCTYPE html>
+            <html>
+                <head>
+                    <title>{self.app_name} Authentication</title>
+                </head>
+                <body style="font-family:Cantarell,Sans-serif;padding-top:30px;">
+                    <center>
+                        <h3><strong>Success!</strong></h3>
+                        <h4>You may now close this window.</h4>
+                    </center>
+                </body>
+            <html>
+            """
+            self.flask_server = Flask(__name__)
+            @self.flask_server.route('/oauth', methods=['GET'])
+            def oauth():
+                args = request.args
+                keyring.set_password("io.github.thekrafter.Groupings", os.environ["USER"], args.get('access_token'))
+                return html_success_page
         
+            # Start Webserver
+            webserver = Process(target=self.flask_server.run, kwargs=dict(host='127.0.0.1', port='8089'))
+            webserver.start()
+
+            # Wait for oauth to complete
+            waited = 0
+            while keyring.get_password("io.github.thekrafter.Groupings", os.environ["USER"]) == None:
+                time.sleep(2)
+                waited += 2
+                logger.debug(f'Waiting for access token... ({waited} seconds)')
+            
+            # Once complete, tidy up
+            self.access_token = keyring.get_password("io.github.thekrafter.Groupings", os.environ["USER"])
+            logger.success(f'Got access token!')
+            webserver.kill()
+            webserver.join()
+        
+        else:
+            logger.success(f'Found access token!')
+
+        # Establish Client
+        client = Client.from_token()
+
+
+
 
 class MyApp(Adw.Application):
     def __init__(self, **kwargs):
