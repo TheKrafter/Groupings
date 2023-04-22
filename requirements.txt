@@ -1,2 +1,4 @@
 GroupyAPI
 logging42
+keyring
+Flask
