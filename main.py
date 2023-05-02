@@ -11,7 +11,7 @@ gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
 from gi.repository import Gtk, Adw
 
-import groupy.client import Client
+from groupy.client import Client
 import keyring
 
 
@@ -21,6 +21,7 @@ class MainWindow(Gtk.ApplicationWindow):
         
         self.set_title("Groupings")
         self.client_id = "BNDU2FYRc9qOJOenhpVYB3SpIIPr7PJE8PNzBkriPOxiFw3Z"
+        self.set_default_size(720, 240)
 
         logger.info(f'Fetching access token for {os.environ["USER"]}...')
         # Fetch Keyring
@@ -29,11 +30,18 @@ class MainWindow(Gtk.ApplicationWindow):
         if self.access_token == None:
             # Get Access Token if it Doesn't Exist
             # ------------------------------------
+            # 0. Show we're waiting for token
             # 1. Sends the user to the OAuth URL in their browser
             # 2. Sets up a flask server to accept the callback
             # 3. Gets the token from the passed 'access_token' argument, saving to to the keyring
             # 4. Waits for the value to be in the keyring
             # 5. Closes the webserver and continues
+
+            # Inform user we're waiting for token
+            self.waiting_screen = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+            self.waiting_label = Gtk.Label(label='Waiting for browser authentication...')
+            self.waiting_screen.append(self.waiting_label)
+            self.set_child(self.waiting_screen)
 
             import webbrowser
             from flask import Flask, request
@@ -47,7 +55,7 @@ class MainWindow(Gtk.ApplicationWindow):
             <!DOCTYPE html>
             <html>
                 <head>
-                    <title>{self.app_name} Authentication</title>
+                    <title>{self.get_title()} Authentication</title>
                 </head>
                 <body style="font-family:Cantarell,Sans-serif;padding-top:30px;">
                     <center>
@@ -71,8 +79,8 @@ class MainWindow(Gtk.ApplicationWindow):
             # Wait for oauth to complete
             waited = 0
             while keyring.get_password("io.github.thekrafter.Groupings", os.environ["USER"]) == None:
-                time.sleep(2)
-                waited += 2
+                time.sleep(5)
+                waited += 5
                 logger.debug(f'Waiting for access token... ({waited} seconds)')
             
             # Once complete, tidy up
@@ -85,10 +93,18 @@ class MainWindow(Gtk.ApplicationWindow):
             logger.success(f'Found access token!')
 
         # Establish Client
-        client = Client.from_token()
+        self.client = Client.from_token(self.access_token)
 
-
-
+        # Construct window
+        self.box_grouplist = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self.set_child(self.box_grouplist)
+        ## Add group items
+        self.listbox_groups = Gtk.ListBox()
+        for group in client.groups.list():
+            current = Gtk.ListBoxRow(label=group.name, description=group.id)
+            self.listbox_groups.append(current)
+    
+    
 
 class MyApp(Adw.Application):
     def __init__(self, **kwargs):
