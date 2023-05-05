@@ -84,16 +84,7 @@ class MainWindow(Gtk.ApplicationWindow):
         self.chat_leaflet_left.append(self.groups_listing)
 
         self.chat_leaflet.append(self.chat_leaflet_left)
-        #self.box_grouplist = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
-        #self.chat_leaflet.append(self.box_grouplist)
-        ### Add group items
-        #for group in self.client.get_groups():
-        #    current = Gtk.Button.new_with_label(f'{group["name"]}')
-        #    current.set_margin_top(5)
-        #    current.set_margin_bottom(5)
-        #    current.set_margin_start(5)
-        #    current.set_margin_end(5)
-        #    self.box_grouplist.append(current)
+
         
         self.set_child(self.chat_leaflet)
 
