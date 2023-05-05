@@ -1,4 +1,4 @@
-GroupyAPI
+git+https://github.com/TheKrafter/GroupPy.git@21a7114
 logging42
 keyring
 Flask
