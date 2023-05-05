@@ -22,8 +22,8 @@ class MainWindow(Gtk.ApplicationWindow):
         self.set_title("Groupings")
         self.set_default_size(480, 720)
 
-        self.header = Adw.HeaderBar.new()
-        self.set_titlebar(self.header)
+        #self.header = Adw.HeaderBar.new()
+        #self.set_titlebar(self.header)
 
         # Establish Client
         self.client_id = "BNDU2FYRc9qOJOenhpVYB3SpIIPr7PJE8PNzBkriPOxiFw3Z"
@@ -62,17 +62,17 @@ class MainWindow(Gtk.ApplicationWindow):
         ### Left Pane
         self.chat_leaflet_left = Gtk.Box()
         #### HeaderBar
-        #groups_headerbar = Adw.HeaderBar.new()
-        #groups_headerbar.set_title_widget(Gtk.Label.new("Groups"))
-        #self.chat_leaflet_left.append(groups_headerbar)
+        groups_headerbar = Adw.HeaderBar.new()
+        groups_headerbar.set_title_widget(Gtk.Label.new("Groups"))
+        self.chat_leaflet_left.append(groups_headerbar)
         #### ListBox
         self.groups_listing = Gtk.ListBox.new()
         self.groups_listing.set_selection_mode(Gtk.SelectionMode.SINGLE)
-        self.groups_listing.set_hexpand(True)
-        self.groups_listing.set_margin_top(12)
-        self.groups_listing.set_margin_bottom(12)
-        self.groups_listing.set_margin_start(6)
-        self.groups_listing.set_margin_end(6)
+        #self.groups_listing.set_hexpand(True)
+        #self.groups_listing.set_margin_top(12)
+        #self.groups_listing.set_margin_bottom(12)
+        #self.groups_listing.set_margin_start(6)
+        #self.groups_listing.set_margin_end(6)
 
         ##### Get Groups
         for group in self.client.get_groups():
@@ -85,6 +85,12 @@ class MainWindow(Gtk.ApplicationWindow):
 
         self.chat_leaflet.append(self.chat_leaflet_left)
 
+        ### Separator
+        self.chat_leaflet_separator = Adw.LeafletPage(child=Gtk.Separator.new(Gtk.Orientation.VERTICAL))
+        self.chat_leaflet_separator.set_navigatable(False)
+
+        ### Right Pane (Chat Window)
+        
         
         self.set_child(self.chat_leaflet)
 
