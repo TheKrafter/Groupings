@@ -89,14 +89,32 @@ class MainWindow(Gtk.ApplicationWindow):
         self.chat_leaflet_separator = Adw.LeafletPage(child=Gtk.Separator.new(Gtk.Orientation.VERTICAL))
         self.chat_leaflet_separator.set_navigatable(False)
 
+
         ### Right Pane (Chat Window)
-        
+        self.chat_leaflet_right = Gtk.Box()
+
+        #### HeaderBar
+        self.messages_headerbar = Adw.HeaderBar.new()
+        self.messages_headerbar_title = Adw.WindowTitle.new("Messages")
+        self.messages_headerbar.set_title_widget(self.messages_headerbar_title)
+
+        messages_headerbar_back = Gtk.Button.new()
+        messages_headerbar_back.set_icon_name("go-previous-symbolic")
+        messages_headerbar_back.connect("clicked", self.on_back_leaflet, 'leaflet-back')
+
+        self.messages_headerbar_title.pack
+        self.chat_leaflet_right.append(self.messages_headerbar)
+
+
         
         self.set_child(self.chat_leaflet)
 
     def on_group_open(self, group_id):
         """ Open group panel """
         logger.info(f'Open group {group_id}')
+
+    def on_back_leaflet(self, button, name):
+        pass
     
     
 
