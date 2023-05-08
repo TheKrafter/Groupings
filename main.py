@@ -60,7 +60,7 @@ class MainWindow(Gtk.ApplicationWindow):
         self.chat_leaflet.set_hexpand(True)
         
         ### Left Pane
-        self.chat_leaflet_left = Gtk.Box()
+        self.chat_leaflet_left = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         #### HeaderBar
         groups_headerbar = Adw.HeaderBar.new()
         groups_headerbar.set_title_widget(Gtk.Label.new("Groups"))
@@ -91,20 +91,25 @@ class MainWindow(Gtk.ApplicationWindow):
 
 
         ### Right Pane (Chat Window)
-        self.chat_leaflet_right = Gtk.Box()
+        self.chat_leaflet_right = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 
         #### HeaderBar
         self.messages_headerbar = Adw.HeaderBar.new()
-        self.messages_headerbar_title = Adw.WindowTitle.new("Messages")
+        self.messages_headerbar_title = Adw.WindowTitle.new("Messages", "Group Name")
         self.messages_headerbar.set_title_widget(self.messages_headerbar_title)
 
         messages_headerbar_back = Gtk.Button.new()
         messages_headerbar_back.set_icon_name("go-previous-symbolic")
         messages_headerbar_back.connect("clicked", self.on_back_leaflet, 'leaflet-back')
 
-        self.messages_headerbar_title.pack
+        self.messages_headerbar.pack_start(messages_headerbar_back)
         self.chat_leaflet_right.append(self.messages_headerbar)
 
+        #### Chat UI Box
+        self.box_chat_ui = Gtk.Box()
+        self.chat_leaflet_right.append(self.box_chat_ui)
+
+        self.chat_leaflet.append(self.chat_leaflet_right)
 
         
         self.set_child(self.chat_leaflet)
