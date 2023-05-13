@@ -51,72 +51,57 @@ class MainWindow(Gtk.ApplicationWindow):
             logger.success(f'Found access token!')
             self.client = GroupMeClient(self.access_token, oauth_complete=True)
 
+        # Construct Window (Take Two)
+        self.header = Gtk.HeaderBar()
+        self.set_titlebar(self.header)
 
+        self.leaflet = Adw.Leaflet(
+            halign = Gtk.Align.FILL,
+            valign = Gtk.Align.FILL
+        )
+        self.set_child(self.leaflet)
 
-        # Construct window
-        ## Leaflet
-        self.chat_leaflet = Adw.Leaflet.new() # can_navigate_back = True, hexpand = True
-        self.chat_leaflet.set_can_navigate_back(True)
-        self.chat_leaflet.set_hexpand(True)
-        
-        ### Left Pane
-        self.chat_leaflet_left = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        #### HeaderBar
-        groups_headerbar = Adw.HeaderBar.new()
-        groups_headerbar.set_title_widget(Gtk.Label.new("Groups"))
-        self.chat_leaflet_left.append(groups_headerbar)
-        #### ListBox
-        self.groups_listing = Gtk.ListBox.new()
-        self.groups_listing.set_selection_mode(Gtk.SelectionMode.SINGLE)
-        #self.groups_listing.set_hexpand(True)
-        #self.groups_listing.set_margin_top(12)
-        #self.groups_listing.set_margin_bottom(12)
-        #self.groups_listing.set_margin_start(6)
-        #self.groups_listing.set_margin_end(6)
+        self.page_groups = Gtk.Box(
+            spacing = 4,
+            halign = Gtk.Align.FILL,
+            valign = Gtk.Align.FILL,
+            hexpand = True,
+            vexpand = True,
+            orientation = Gtk.Orientation.VERTICAL
+        )
 
-        ##### Get Groups
+        self.list_groups = Gtk.ListBox.new()
+        self.list_groups.set_selection_mode(Gtk.SelectionMode.SINGLE)
+
         for group in self.client.get_groups():
             current = Adw.ActionRow.new()
             current.set_title(f'{group["name"]}')
             current.set_subtitle(f'{group["id"]}')
-            current.connect('activated', self.on_group_open, group["id"])
-            self.groups_listing.append(current)
-        self.chat_leaflet_left.append(self.groups_listing)
-
-        self.chat_leaflet.append(self.chat_leaflet_left)
-
-        ### Separator
-        self.chat_leaflet_separator = Adw.LeafletPage(child=Gtk.Separator.new(Gtk.Orientation.VERTICAL))
-        self.chat_leaflet_separator.set_navigatable(False)
+            current.connect('activated', self.on_group_open)
+            self.list_groups.append(current)
 
 
-        ### Right Pane (Chat Window)
-        self.chat_leaflet_right = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self.page_groups.append(self.list_groups)
+        self.leaflet.append(self.page_groups)
 
-        #### HeaderBar
-        self.messages_headerbar = Adw.HeaderBar.new()
-        self.messages_headerbar_title = Adw.WindowTitle.new("Messages", "Group Name")
-        self.messages_headerbar.set_title_widget(self.messages_headerbar_title)
+        self.page_chat = Gtk.Box(
+            spacing = 2,
+            halign = Gtk.Align.FILL,
+            valign = Gtk.Align.FILL,
+            hexpand = True,
+            vexpand = True,
+            orientation = Gtk.Orientation.VERTICAL
+        )
+        placeholder = Gtk.Label(label="Select a Group")
+        self.page_chat.append(placeholder)
+        self.leaflet.append(self.page_chat)
 
-        messages_headerbar_back = Gtk.Button.new()
-        messages_headerbar_back.set_icon_name("go-previous-symbolic")
-        messages_headerbar_back.connect("clicked", self.on_back_leaflet, 'leaflet-back')
-
-        self.messages_headerbar.pack_start(messages_headerbar_back)
-        self.chat_leaflet_right.append(self.messages_headerbar)
-
-        #### Chat UI Box
-        self.box_chat_ui = Gtk.Box()
-        self.chat_leaflet_right.append(self.box_chat_ui)
-
-        self.chat_leaflet.append(self.chat_leaflet_right)
-
-        
-        self.set_child(self.chat_leaflet)
-
-    def on_group_open(self, group_id):
+    def on_group_open(self, widget):
         """ Open group panel """
-        logger.info(f'Open group {group_id}')
+        logger.info(f'Open group {group_id}.')
+        self.leaflet.set_visible_child(self.page_chat)
+
+
 
     def on_back_leaflet(self, button, name):
         pass
