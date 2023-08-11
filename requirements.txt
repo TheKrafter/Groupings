@@ -1,4 +1,4 @@
-git+https://github.com/TheKrafter/GroupPy.git@21a7114
+git+https://github.com/TheKrafter/GroupPy.git@19da1c1
 logging42
 keyring
 Flask

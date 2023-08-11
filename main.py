@@ -9,7 +9,8 @@ import time
 import gi
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
-from gi.repository import Gtk, Adw
+gi.require_version('Gdk', '4.0')
+from gi.repository import Gtk, Adw, Gdk
 
 from grouppy import GroupMeClient
 import keyring
@@ -22,45 +23,25 @@ class MainWindow(Gtk.ApplicationWindow):
         self.set_title("Groupings")
         self.set_default_size(480, 720)
 
-        #self.header = Adw.HeaderBar.new()
-        #self.set_titlebar(self.header)
+        # Header
+        self.header = Adw.HeaderBar.new()
+        self.set_titlebar(self.header)
 
-        # Construct Window (Take Two)
+        # Construct Window
         self.header = Gtk.HeaderBar()
         self.set_titlebar(self.header)
 
-        self.leaflet = Adw.Leaflet(
-            halign = Gtk.Align.FILL,
-            valign = Gtk.Align.FILL
-        )
-        self.set_child(self.leaflet)
+        self.page = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        self.set_child(self.page)
 
-        self.page_groups = Gtk.Box(
-            spacing = 4,
-            halign = Gtk.Align.FILL,
-            valign = Gtk.Align.FILL,
-            hexpand = True,
-            vexpand = True,
-            orientation = Gtk.Orientation.VERTICAL
-        )
+        self.stack = Gtk.Stack.new()
+        self.sidebar = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        
+        self.page.append(self.sidebar)
+        self.page.append(self.stack)
 
-        self.list_groups = Gtk.ListBox.new()
-        self.list_groups.set_selection_mode(Gtk.SelectionMode.SINGLE)
-
-        self.page_groups.append(self.list_groups)
-        self.leaflet.append(self.page_groups)
-
-        self.page_chat = Gtk.Box(
-            spacing = 2,
-            halign = Gtk.Align.FILL,
-            valign = Gtk.Align.FILL,
-            hexpand = True,
-            vexpand = True,
-            orientation = Gtk.Orientation.VERTICAL
-        )
-        placeholder = Gtk.Label(label="Select a Group")
-        self.page_chat.append(placeholder)
-        self.leaflet.append(self.page_chat)
+        self.chat_pages = {}
+        self.got_messages = {}
 
     def login(self):
         # Establish Client
@@ -85,10 +66,12 @@ class MainWindow(Gtk.ApplicationWindow):
             keyring.get_keyring()
             keyring.set_password("io.github.thekrafter.Groupings", os.environ["USER"], self.client.access_token)
             logger.info(f'Set new access token on keyring.')
+
+            self.set_child(self.stack)
         else:
             logger.success(f'Found access token!')
             self.client = GroupMeClient(self.access_token, oauth_complete=True)
-        
+
     def populate_groups_list(self):
         """ Populate the list of groups """
         for group in self.client.get_groups():
@@ -97,7 +80,7 @@ class MainWindow(Gtk.ApplicationWindow):
 
             message = self.client.get_messages(group["id"], limit=1)['messages'][0]
             current.set_subtitle(f'{message["name"]}: {message["text"]}')
-            
+
             current.connect('activated', self.on_group_open, group['id'])
 
             button = Gtk.Button.new()
@@ -105,22 +88,70 @@ class MainWindow(Gtk.ApplicationWindow):
             button.set_icon_name('user-available-symbolic')
 
             current.add_suffix(button)
+            current.set_size_request(300, 20)
+            
+            self.sidebar.append(current)
 
-            self.list_groups.append(current)
+            self.create_page_for_group(group)
+        
+        logger.info(str(self.chat_pages))
+
+    def create_page_for_group(self, group: dict):
+        """ Add a stack page named by id for a given group """
+        logger.debug(f'Creating page for group {group["id"]}')
+        window = Gtk.ScrolledWindow.new()
+        window.set_policy(hscrollbar_policy = Gtk.PolicyType.NEVER, vscrollbar_policy = Gtk.PolicyType.AUTOMATIC )
+
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        box.append(Gtk.Label.new(f'Group: {group["name"]}\nID: {group["id"]}'))
+        box.set_size_request(500, 500)
+
+        window.set_child(box)
+        self.chat_pages[str(group["id"])] = box
+
+        self.stack.add_named(window, group["id"])
+        logger.debug(f'Created page for group {group["id"]}!')
 
     def on_group_open(self, widget, id):
         """ Open group panel """
         logger.info(f'Open group {id}.')
-        self.leaflet.set_visible_child(self.page_chat)
+        group = self.client.get_group(id)
+        self.set_title('Groupings - ' + group["name"])
+        
+        self.stack.set_visible_child_name(str(id))
 
-        self.page_chat
+        child = self.stack.get_child_by_name(str(id))
+        chatbox = self.chat_pages[str(id)]
+            
 
+        try:
+            if self.got_messages[str(id)] == True:
+                messages = self.client.get_messages_new(id)
+        except KeyError:
+            messages = self.client.get_messages(id, limit=20)
+            self.got_messages[str(id)] = True
 
+        for msg in messages["messages"][::-1]:
+            box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+            box.set_size_request(400, 10)
+
+            avatar = Adw.Avatar(text = msg["name"])
+            box.append(avatar)
+
+            content = Adw.ActionRow.new()
+            content.set_title(msg["name"])
+            content.set_subtitle(msg["text"])
+            box.append(content)
+
+            chatbox.append(box)
+
+    def on_message_send(self, widget, id, content, chatbox):
+        """ Send a message to a group """
+        self.client.send_message(id, text)
+        return True
 
     def on_back_leaflet(self, button, name):
         pass
-    
-    
 
 class MyApp(Adw.Application):
     def __init__(self, **kwargs):
