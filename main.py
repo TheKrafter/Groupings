@@ -44,6 +44,7 @@ class MainWindow(Gtk.ApplicationWindow):
         self.chat_pages = {}
         self.got_messages = {}
         self.oldest_message = {}
+        self.inputboxes = {}
 
     def login(self):
         # Establish Client
@@ -101,8 +102,22 @@ class MainWindow(Gtk.ApplicationWindow):
     def create_page_for_group(self, group: dict):
         """ Add a stack page named by id for a given group """
         logger.debug(f'Creating page for group {group["id"]}')
+        full = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+
         window = Gtk.ScrolledWindow.new()
         window.set_policy(hscrollbar_policy = Gtk.PolicyType.NEVER, vscrollbar_policy = Gtk.PolicyType.AUTOMATIC )
+        window.set_size_request(300, 650)
+        
+        full.append(window)
+
+        inputbox = Adw.EntryRow.new()
+        inputbox.set_show_apply_button(True)
+        inputbox.set_enable_emoji_completion(True)
+        inputbox.set_title('Message...')
+        inputbox.set_input_purpose(Gtk.InputPurpose.FREE_FORM)
+        # TODO: Attach on_message_send to inputbox and find how to get contents
+        #inputbox.attach('apply', self.on_message_send, group["id"])
+        full.append(inputbox)
 
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         box.append(Gtk.Label.new(f'Group: {group["name"]}\nID: {group["id"]}'))
@@ -111,10 +126,12 @@ class MainWindow(Gtk.ApplicationWindow):
         window.set_child(box)
         self.chat_pages[str(group["id"])] = box
 
-        self.stack.add_named(window, group["id"])
+        self.stack.add_named(full, group["id"])
         logger.debug(f'Created page for group {group["id"]}!')
 
-    def on_group_open(self, widget, id, load_older ):
+        self.inputboxes[group["id"]] = inputbox
+
+    def on_group_open(self, widget, id):
         """ Open group panel """
         logger.info(f'Open group {id}.')
         group = self.client.get_group(id)
@@ -124,25 +141,31 @@ class MainWindow(Gtk.ApplicationWindow):
 
         child = self.stack.get_child_by_name(str(id))
         chatbox = self.chat_pages[str(id)]
-            
+        
+        self.inputboxes[str(id)].grab_focus_without_selecting()
 
         try:
             if self.got_messages[str(id)] == True:
-                messages = self.client.get_messages_new(id)
+                return
         except KeyError:
             messages = self.client.get_messages(id, limit=20)
             self.got_messages[str(id)] = True
 
-        got_oldest = False
         for msg in messages["messages"][::-1]:
-            if not got_oldest:
-                self.oldest_message[str(id)] = msg["id"]
             box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
             box.set_size_request(400, 10)
 
             avatar = Adw.Avatar(text = msg["name"])
             avatar.set_size(35)
-            avatar.set_show_initials(True)
+
+            if msg["name"] == "GroupMe":
+                avatar.set_show_initials(False)
+                avatar.set_icon_name('emblem-system-symbolic')
+            elif not msg["name"][0].lower() in "abcdefghijklmnopqrstuvwxyz":
+                avatar.set_show_initials(False)
+            else:
+                avatar.set_show_initials(True)
+
             box.append(avatar)
 
             content = Adw.ActionRow.new()
@@ -152,9 +175,10 @@ class MainWindow(Gtk.ApplicationWindow):
 
             chatbox.append(box)
 
-    def on_message_send(self, widget, id, content, chatbox):
+    def on_message_send(self, widget, *args, **kwargs):
         """ Send a message to a group """
-        self.client.send_message(id, text)
+        logger.info(args)
+        logger.debug(kwargs)
         return True
 
     def on_back_leaflet(self, button, name):
