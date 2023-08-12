@@ -5,6 +5,7 @@ from logging42 import logger
 import sys
 import os
 import time
+import requests
 
 import gi
 gi.require_version('Gtk', '4.0')
@@ -42,6 +43,7 @@ class MainWindow(Gtk.ApplicationWindow):
 
         self.chat_pages = {}
         self.got_messages = {}
+        self.oldest_message = {}
 
     def login(self):
         # Establish Client
@@ -112,7 +114,7 @@ class MainWindow(Gtk.ApplicationWindow):
         self.stack.add_named(window, group["id"])
         logger.debug(f'Created page for group {group["id"]}!')
 
-    def on_group_open(self, widget, id):
+    def on_group_open(self, widget, id, load_older ):
         """ Open group panel """
         logger.info(f'Open group {id}.')
         group = self.client.get_group(id)
@@ -131,11 +133,16 @@ class MainWindow(Gtk.ApplicationWindow):
             messages = self.client.get_messages(id, limit=20)
             self.got_messages[str(id)] = True
 
+        got_oldest = False
         for msg in messages["messages"][::-1]:
+            if not got_oldest:
+                self.oldest_message[str(id)] = msg["id"]
             box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
             box.set_size_request(400, 10)
 
             avatar = Adw.Avatar(text = msg["name"])
+            avatar.set_size(35)
+            avatar.set_show_initials(True)
             box.append(avatar)
 
             content = Adw.ActionRow.new()
