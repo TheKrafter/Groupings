@@ -1,12 +1,16 @@
+> NOTE: This branch is a complete rewrite of the client!
+
 # Groupings
+
 A GTK4/Libadwaita GroupMe client in Python.
 
 ## Dependencies
 
- - [rhgrant10/GroupyAPI](https://github.com/rhgrant10/Groupy)
- - [cuuush/groupme-push](https://github.com/cuuush/groupme-push)
- - GTK4 Python Bindings (gobject-introspection)
- - Libadwaita 1+
+ - [TheKrafter/GroupPy](https://github.com/TheKrafter/GroupPy) (Custom OAuth Flow)
+ - [rhgrant10/GroupyAPI](https://github.com/rhgrant10/Groupy) (REST API)
+ - [cuuush/groupme-push](https://github.com/cuuush/groupme-push) (Push messaging service)
+ - GTK4 Python Bindings (gobject-introspection) (GUI)
+ - Libadwaita 1+ (GUI)
 
 ## Installation
 
