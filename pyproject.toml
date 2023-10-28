@@ -30,3 +30,7 @@ dependencies = [
     "groupme-push >=0.0.2",
     "GroupyAPI >=0.10.3"
 ]
+
+[project.urls]
+Home = "https://github.com/TheKrafter/Groupings"
+Source = "https://github.com/TheKrafter/Groupings"
