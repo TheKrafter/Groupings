@@ -20,12 +20,11 @@ A GTK4/Libadwaita GroupMe client in Python.
     ```
 2. Build & Install:
     ```
-    flit build --format wheel
-    pip install --user dist/groupings*.whl
+    flit install --user
     ```
-3. Assuming pip installs it to a directory already in your `$PATH`, run with:
+3. Run:
     ```
-    groupings
+    python3 -m groupings
     ```
 
 Refer to your system's package manager for how to install GTK 4 and Libadwaita.
