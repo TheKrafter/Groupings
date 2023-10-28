@@ -16,7 +16,7 @@ A GTK4/Libadwaita GroupMe client in Python.
 
 1. Install [flit](https://flit.pypa.io/en/stable/):
     ```
-    python3 -m pip install flit
+    pip install flit
     ```
 2. Build & Install:
     ```
