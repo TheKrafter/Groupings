@@ -15,5 +15,4 @@ from groupme_push.client import PushClient
 if __name__ == '__main__':
     # Run Code Here
     logger.warning('Hold on! We haven\'t even written the code yet!')
-    raise NotImplementedError
     
