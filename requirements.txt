@@ -1,5 +1,0 @@
-git+https://github.com/TheKrafter/GroupPy.git@154550b
-logging42
-keyring
-groupme-push
-GroupyAPI

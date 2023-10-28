@@ -14,10 +14,19 @@ A GTK4/Libadwaita GroupMe client in Python.
 
 ## Installation
 
-To install Python dependencies:
-```sh
-pip install -r requirements.txt
-```
+1. Install [flit](https://flit.pypa.io/en/stable/):
+    ```
+    python3 -m pip install flit
+    ```
+2. Build & Install:
+    ```
+    flit build --format wheel
+    pip install --user dist/groupings*.whl
+    ```
+3. Assuming pip installs it to a directory already in your `$PATH`, run with:
+    ```
+    groupings
+    ```
 
 Refer to your system's package manager for how to install GTK 4 and Libadwaita.
 
@@ -27,5 +36,12 @@ Refer to your system's package manager for how to install GTK 4 and Libadwaita.
 ####### Notes for Devs
 
 Emojis: [How Tuba does it](https://github.com/GeopJr/Tuba/issues/622#issuecomment-1781663957) 
+
+Documentation:
+ - [GroupyAPI](http://groupy.readthedocs.org/en/latest/)
+ - [groupme-push](https://pypi.org/project/groupme-push/)
+ - [keyring](https://pypi.org/project/keyring/)
+
+OAuth Flow: take from [TheKrafter/GroupPy](https://github.com/TheKrafter/GroupPy/blob/main/grouppy/__init__.py#L37)
 
 </details>

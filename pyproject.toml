@@ -1,0 +1,32 @@
+[build-system]
+build-backend = "flit_core.buildapi"
+requires = ["flit_core >=3.2,<4"]
+
+[project]
+name = "groupings"
+version = "0.0.1"
+authors = [
+    {name = "Krafter"}
+]
+description = "A GTK4/Libadwaita GroupMe client for GNOME"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Development Status :: 1 - Planning",
+    "Environment :: X11 Applications :: GTK",
+    "Environment :: X11 Applications :: Gnome",
+    "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Topic :: Communications :: Chat",
+    "Topic :: Desktop Environment :: Gnome",
+    "Topic :: Internet"
+]
+dependencies = [
+    "logging42 >=0.0.8",
+    "keyring >=24.2.0",
+    "groupme-push >=0.0.2",
+    "GroupyAPI >=0.10.3"
+]
