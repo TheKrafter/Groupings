@@ -34,3 +34,7 @@ dependencies = [
 [project.urls]
 Home = "https://github.com/TheKrafter/Groupings"
 Source = "https://github.com/TheKrafter/Groupings"
+
+# Somehow needs to, on build
+#   Move xyz.krafterdev.Groupings.desktop to `applications` xdg-dir
+#   Run: xdg-mime default xyz.krafterdev.Groupings.desktop x-scheme-handler/groupings

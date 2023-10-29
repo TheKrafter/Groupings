@@ -5,14 +5,20 @@
 # Licensed subject to the MPL version 2.0 or Later
 # 
 from logging42 import logger
-import keyring
 
-from groupy import Client
-from groupme_push.client import PushClient
+import sys
+
+from .internal import ui, oauth
+from .internal.lang import lang
+
+# GLOBAL VARIABLES
+global APPLICATION_ID
+APPLICATION_ID = 'xyz.krafterdev.Groupings'
 
 # Code Here
 
 if __name__ == '__main__':
-    # Run Code Here
-    logger.warning('Hold on! We haven\'t even written the code yet!')
+    logger.success("Starting Groupings...")
+
+    ui.run(APPLICATION_ID) # blocking
     

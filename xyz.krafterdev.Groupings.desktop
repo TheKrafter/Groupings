@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=Groupings
+Exec=python3 -m groupings %u
+StartupNotify=false
+MimeType=x-scheme-handler/groupings;
