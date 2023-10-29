@@ -1,4 +1,4 @@
-> NOTE: This branch is a complete rewrite of the client!
+> NOTE: This branch is a complete rewrite of the client! See the [TODO](TODO.md).
 
 # Groupings
 
@@ -32,7 +32,7 @@ Refer to your system's package manager for how to install GTK 4 and Libadwaita.
 
 <details>
 
-####### Notes for Devs
+###### Notes for Devs
 
 Emojis: [How Tuba does it](https://github.com/GeopJr/Tuba/issues/622#issuecomment-1781663957) 
 
