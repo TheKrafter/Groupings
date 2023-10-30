@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Name=Groupings
+Comment=Chat on GroupMe
+GenericName=GroupMe Client
+Exec=/app/start/start.sh %u
+Terminal=false
+Categories=GNOME;GTK;Network;
+Keywords=message;group;groups;groupings;groupme;
+StartupNotify=true
+X-GNOME-UsesNotifications=true
+MimeType=x-scheme-handler/groupings;
+X-Purism-FormFactor=Workstation;Mobile;

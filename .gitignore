@@ -1,3 +1,8 @@
+# Flatpak
+build-dir/
+python3-requirements.yaml
+.flatpak-builder/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

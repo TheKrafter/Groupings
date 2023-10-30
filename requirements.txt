@@ -1,0 +1,4 @@
+groupme-push ~=0.0.2
+GroupyAPI ~=0.10.3
+flit
+pyxdg ~=0.28

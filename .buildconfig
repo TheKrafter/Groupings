@@ -1,0 +1,12 @@
+[default]
+name=Default
+runtime=host
+toolchain=default
+config-opts=
+run-opts=
+prefix=/app
+app-id=xyz.krafterdev.Groupings
+postbuild=
+prebuild=
+run-command=python3 -m groupings
+default=true

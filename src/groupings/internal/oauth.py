@@ -3,7 +3,7 @@
 # Copyright (c) 2023 Krafter - krafterdev.xyz
 # Licensed subject to the MPL version 2.0 or Later
 # 
-from logging42 import logger
+import logging
 
 from multiprocessing import Process
 

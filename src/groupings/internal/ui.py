@@ -3,7 +3,7 @@
 # Copyright (c) 2023 Krafter - krafterdev.xyz
 # Licensed subject to the MPL version 2.0 or Later
 # 
-from logging42 import logger
+import logging
 
 import gi
 
@@ -81,6 +81,6 @@ class MainApp(Adw.Application):
         self.win.present()
 
 def run(id: str, *args, **kwargs):
-    logger.debug("Starting UI")
+    logging.debug("Starting UI")
     app = MainApp(application_id=id)
     app.run(*args, **kwargs)
