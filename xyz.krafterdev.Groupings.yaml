@@ -101,7 +101,7 @@ modules:
       - type: dir
         path: ./
 finish-args:
-  #- --device=dri
+  - --device=dri
   - --share=network
   - --socket=fallback-x11
   - --socket=wayland
