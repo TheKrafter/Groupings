@@ -1,6 +1,6 @@
 [default]
 name=Default
-runtime=host
+runtime=org.gnome.Platform//45
 toolchain=default
 config-opts=
 run-opts=
@@ -8,5 +8,5 @@ prefix=/app
 app-id=xyz.krafterdev.Groupings
 postbuild=
 prebuild=
-run-command=python3 -m groupings
+run-command=/app/start/start.sh
 default=true
