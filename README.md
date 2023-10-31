@@ -2,17 +2,18 @@
 
 # Groupings
 
-A GTK4/Libadwaita GroupMe client in Python.
+A GTK4/Libadwaita [GroupMe](https://groupme.com/) client in Python.
 
 ## Dependencies
 
- - [TheKrafter/GroupPy](https://github.com/TheKrafter/GroupPy) (Custom OAuth Flow)
  - [rhgrant10/GroupyAPI](https://github.com/rhgrant10/Groupy) (REST API)
  - [cuuush/groupme-push](https://github.com/cuuush/groupme-push) (Push messaging service)
  - GTK4 Python Bindings (gobject-introspection) (GUI)
  - Libadwaita 1+ (GUI)
 
 ## Installation
+
+Groupings is currently only supported as a flatpak.
 
 ### Flatpak
 
@@ -24,22 +25,6 @@ A GTK4/Libadwaita GroupMe client in Python.
     ```
     flatpak run xyz.krafterdev.Groupings
     ```
-
-### Flit (Not Recommended)
-1. Install [flit](https://flit.pypa.io/en/stable/):
-    ```
-    pip install flit
-    ```
-2. Build & Install:
-    ```
-    flit install --user
-    ```
-3. Run:
-    ```
-    python3 -m groupings
-    ```
-
-Refer to your system's package manager for how to install GTK 4 and Libadwaita.
 
 ## Licenses
 
