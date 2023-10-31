@@ -16,60 +16,81 @@ from .lang import lang
 
 class MainWindow(Adw.ApplicationWindow):
     def __init__(self, *args, **kwargs):
+        """ The Main Window is constructed here. """
         super().__init__(*args, **kwargs)
 
         self.set_title(lang.title)
-        self.set_default_size(740, 200)
+        self.set_default_size(850, 500) # Width x Height
 
-        # INTERFACE
-        self.flap_main = Adw.Flap.new()
+        # Interface
+        self.view = Adw.OverlaySplitView.new()
 
-        ## MESSAGES VIEW
-        self.box_main_content = Gtk.Box.new( # Box of entire pane
-            orientation = Gtk.Orientation.VERTICAL,
-            spacing = 5
-        )
+        ## Chat Panel
+        self.chat_box = Gtk.Box.new(
+            orientation = Gtk.Orientation.VERTICAL, spacing = 5
+            )
+        self.chat_box.set_size_request(300, 500) # Width x Height
+        self.chat_header = Adw.HeaderBar.new()
+        self.chat_title = Adw.WindowTitle.new(lang.chat.title_start, lang.chat.subtitle_start)
+        self.chat_header.set_title_widget(self.chat_title)
+        self.chat_header_backbtn = Gtk.Button.new_from_icon_name("go-previous-symbolic")
+        self.chat_header_backbtn.connect("clicked", self.toggle_sidebar)
+        self.chat_header.pack_start(self.chat_header_backbtn)
+        self.chat_box.append(self.chat_header)
+        self.chat_box.append(Gtk.Label.new(lang.debug.messages)) #TODO
+        self.view.set_content(self.chat_box)
 
-        self.header_main_content = Adw.HeaderBar.new() # Header for pane
-        self.button_back_header_main = Gtk.Button.new_from_icon_name(
-            "go-previous-symbolic"
-        )
-        self.header_main_content.pack_start(self.button_back_header_main)
-        self.box_main_content.append(self.header_main_content)
+        ## Groups List
+        self.groups_box = Gtk.Box.new(
+            orientation = Gtk.Orientation.VERTICAL, spacing = 8
+            )
+        self.groups_box.set_size_request(250, 500) # Width x Height
+        self.groups_header = Adw.HeaderBar.new()
+        self.groups_title = Adw.WindowTitle.new(lang.groups.title, "")
+        self.groups_box.append(self.groups_header)
+        self.groups_box.append(Gtk.Label.new(lang.debug.groups_list)) #TODO
+        self.view.set_sidebar(self.groups_box)
 
-        self.box_main_messages = Gtk.Box.new( # Box for Message View
-            orientation = Gtk.Orientation.VERTICAL,
-            spacing = 10
-        )
-        self.box_main_messages.append(Gtk.Label.new(lang.debug.messages)) #DEBUG
-        self.box_main_content.append(self.box_main_messages)
-        
-        self.box_main_input = Gtk.Box.new( # Box for Message send UI
-            orientation = Gtk.Orientation.VERTICAL,
-            spacing = 5
-        )
-        self.box_main_input.append(Gtk.Label.new(lang.debug.input)) #DEBUG
-        self.box_main_content.append(self.box_main_input)
+        ## TODO: Breakpoints
+        #self.breakpoint_condition = Adw.BreakpointCondition.new_and("min-width: 600sp", "max-width: 850sp")
+        #self.breakpoint = Adw.Breakpoint.new()
+        #self.breakpoint.add_setter(self.view, "collapsed", True)
 
-        self.flap_main.set_content(self.box_main_content)
-
-        ## GROUPS VIEW
-        self.box_main_flap = Gtk.Box.new(
-            orientation = Gtk.Orientation.VERTICAL,
-            spacing = 5
-        )
-        self.flap_main.set_flap(self.box_main_flap)
-
-        ### TESTING
-        self.label_test2 = Gtk.Label.new(lang.debug.groups_list) #DEBUG
-        self.box_main_flap.append(self.label_test2) #DEBUG
-
-        self.set_content(self.flap_main)
+        # Set Content
+        self.set_content(self.view)
     
-    def show_flap(self, button):
-        logger.debug('Revealing Flap!')
-        self.flap_main.set_reveal_flap(True)
+    
+    def toggle_sidebar(self, button):
+        """ Toggles the sidebar in self.view (Adw.OverlaySplitView) """
+        if self.view.get_show_sidebar():
+            self.view.set_show_sidebar(False)
+        else:
+            self.view.set_show_sidebar(True)
+    
+    def set_chat_titles(self, title, subtitle):
+        """ Sets the Title and Subtitle for the Chat pane """
+        self.chat_title.set_title(title)
+        self.chat_title.set_title(subtitle)
 
+class LoginWindow(Adw.ApplicationWindow):
+    def __init__(self, *args, **kwargs):
+        """ Window for Logging in. """
+        super().__init__(*args, **kwargs)
+
+        # Login window
+        self.set_title(lang.oauth.title)
+        self.set_default_size(300, 500)
+        self.view = Gtk.Box.new(
+            orientation = Gtk.Orientation.VERTICAL, spacing = 8
+            )
+        self.view.set_size_request(200, 300)
+
+        ## Titlebar
+        self.header = Adw.HeaderBar.new()
+        self.view.append(self.header)
+
+        # Set Content
+        self.set_content(self.view)
 
 class MainApp(Adw.Application):
     def __init__(self, *args, **kwargs):
@@ -77,10 +98,12 @@ class MainApp(Adw.Application):
         self.connect('activate', self.on_activate)
     
     def on_activate(self, app):
-        self.win = MainWindow(application=app)
+        #self.win = MainWindow(application=app)
+        self.win = LoginWindow(application=app)
         self.win.present()
 
 def run(id: str, *args, **kwargs):
-    logging.debug("Starting UI")
+    logger = logging.getLogger()
+    logger.debug("Starting UI")
     app = MainApp(application_id=id)
     app.run(*args, **kwargs)

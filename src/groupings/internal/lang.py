@@ -23,9 +23,18 @@ class Lang:
         self.debug.input = "Input Here!"
         self.debug.groups_list = "Groups List"
 
+        # Groups Panel
+        self.groups = Recursion()
+        self.groups.title = "Groups"
+
+        # Chat Box
+        self.chat = Recursion()
+        self.chat.title_start = "Chat"
+        self.chat.subtitle_start = "Select a Group"
+
         # OAuth Flow
         self.oauth = Recursion()
-        self.oauth.title = "Groupings Authentication"
+        self.oauth.title = "Groupings — Log In"
         self.oauth.success_message = "Success!"
         self.oauth.safe_to_close = "You may now safely close this window."
 

@@ -100,6 +100,15 @@ modules:
     sources:
       - type: dir
         path: ./
+  
+  # PyWebkitGTK
+  - name: pywebkitgtk
+    buildsystem: simple
+    build-commands:
+      - 
+    sources:
+      - type: git
+        url: https://github.com/TheKrafter/pywebkitgtk.git
 finish-args:
   - --device=dri
   - --share=network

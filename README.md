@@ -46,6 +46,7 @@ Documentation:
  - [PyGOBject](https://lazka.github.io/pgi-docs/)
  - [Adw](https://gnome.pages.gitlab.gnome.org/libadwaita/doc/1.4/index.html)
  - [Gtk4](https://docs.gtk.org/gtk4/index.html)
+ - [PyWebkitGTK](https://code.google.com/archive/p/pywebkitgtk/)
 
 OAuth Flow: take from [TheKrafter/GroupPy](https://github.com/TheKrafter/GroupPy/blob/main/grouppy/__init__.py#L37)
 

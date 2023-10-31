@@ -18,12 +18,17 @@ from .internal.lang import lang
 global APPLICATION_ID
 APPLICATION_ID = 'xyz.krafterdev.Groupings'
 
-# Code Here
+# Main Process
+def main():
+    logger = logging.getLogger()
+    logger.info("Starting Groupings...")
+    logger.debug(f"Arguments: {sys.argv}")
+
+    ui.run(APPLICATION_ID)
 
 if __name__ == '__main__':
-    logging.info("Starting Groupings...")
-    print('STARTING')
-    logging.info(f"Arguments: {sys.argv}")
-
-    ui.run(APPLICATION_ID) # blocking
+    try:
+        main()
+    except KeyboardInterrupt:
+        sys.exit(0)
     
