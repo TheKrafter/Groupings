@@ -91,6 +91,7 @@ modules:
     build-commands:
       - pip3 install --verbose --exists-action=i --no-index --prefix=${FLATPAK_DEST} . --no-build-isolation
       - mkdir -p /app/share/applications/
+      - mkdir -p /app/cache
       #- mkdir -p /app/share/mime/packages/
       #- install -m644 -p -t /app/share/mime/packages xyz.krafterdev.Groupings.mime.xml
       #- update-mime-database /app/share/mime
@@ -101,14 +102,6 @@ modules:
       - type: dir
         path: ./
   
-  # PyWebkitGTK
-  - name: pywebkitgtk
-    buildsystem: simple
-    build-commands:
-      - 
-    sources:
-      - type: git
-        url: https://github.com/TheKrafter/pywebkitgtk.git
 finish-args:
   - --device=dri
   - --share=network

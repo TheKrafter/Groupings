@@ -9,8 +9,8 @@ import gi
 
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
-
-from gi.repository import Gtk, Adw
+gi.require_version('WebKit', '6.0')
+from gi.repository import Gtk, Adw, WebKit
 
 from .lang import lang
 
@@ -88,6 +88,11 @@ class LoginWindow(Adw.ApplicationWindow):
         ## Titlebar
         self.header = Adw.HeaderBar.new()
         self.view.append(self.header)
+
+        ## Webview
+        self.webview = WebKit.WebView.new()
+        self.webview.load_uri("https://lite.duckduckgo.com/lite")
+        self.view.append(self.webview)
 
         # Set Content
         self.set_content(self.view)
