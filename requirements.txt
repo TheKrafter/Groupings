@@ -1,4 +1,9 @@
+chardet ~=3.0.4
+flit ~=3.9.0
 groupme-push ~=0.0.2
 GroupyAPI ~=0.10.3
-flit
 pyxdg ~=0.28
+#cffi ~=1.16.0
+#setuptools-rust ~=1.8.1
+#keyring ~=24.2.0
+#keyring_jeepney ~=0.2

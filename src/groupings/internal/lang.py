@@ -35,9 +35,9 @@ class Lang:
         # OAuth Flow
         self.oauth = Recursion()
         self.oauth.title = "Groupings — Log In"
-        self.oauth.success_message = "Success!"
-        self.oauth.safe_to_close = "You may now safely close this window."
-
+        self.oauth.instructions_1 = "Click the button below to log in."
+        self.oauth.instructions_2 = "Note: GroupMe no longer sends verification codes by SMS. Please check the email address associated with your account for your verification pin number."
+        self.oauth.login = "Log In"
 
 
 lang = Lang()

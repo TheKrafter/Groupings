@@ -4,20 +4,23 @@
 # Licensed subject to the MPL version 2.0 or Later
 # 
 import logging
+import webbrowser
+import sys
 
 import gi
 
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
-gi.require_version('WebKit', '6.0')
-from gi.repository import Gtk, Adw, WebKit
+from gi.repository import Gtk, Adw
 
 from .lang import lang
+from . import oauth
 
 class MainWindow(Adw.ApplicationWindow):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, token = None, **kwargs):
         """ The Main Window is constructed here. """
         super().__init__(*args, **kwargs)
+        self.token = token
 
         self.set_title(lang.title)
         self.set_default_size(850, 500) # Width x Height
@@ -28,7 +31,7 @@ class MainWindow(Adw.ApplicationWindow):
         ## Chat Panel
         self.chat_box = Gtk.Box.new(
             orientation = Gtk.Orientation.VERTICAL, spacing = 5
-            )
+        )
         self.chat_box.set_size_request(300, 500) # Width x Height
         self.chat_header = Adw.HeaderBar.new()
         self.chat_title = Adw.WindowTitle.new(lang.chat.title_start, lang.chat.subtitle_start)
@@ -43,18 +46,13 @@ class MainWindow(Adw.ApplicationWindow):
         ## Groups List
         self.groups_box = Gtk.Box.new(
             orientation = Gtk.Orientation.VERTICAL, spacing = 8
-            )
+        )
         self.groups_box.set_size_request(250, 500) # Width x Height
         self.groups_header = Adw.HeaderBar.new()
         self.groups_title = Adw.WindowTitle.new(lang.groups.title, "")
         self.groups_box.append(self.groups_header)
         self.groups_box.append(Gtk.Label.new(lang.debug.groups_list)) #TODO
         self.view.set_sidebar(self.groups_box)
-
-        ## TODO: Breakpoints
-        #self.breakpoint_condition = Adw.BreakpointCondition.new_and("min-width: 600sp", "max-width: 850sp")
-        #self.breakpoint = Adw.Breakpoint.new()
-        #self.breakpoint.add_setter(self.view, "collapsed", True)
 
         # Set Content
         self.set_content(self.view)
@@ -81,34 +79,69 @@ class LoginWindow(Adw.ApplicationWindow):
         self.set_title(lang.oauth.title)
         self.set_default_size(300, 500)
         self.view = Gtk.Box.new(
-            orientation = Gtk.Orientation.VERTICAL, spacing = 8
-            )
+            orientation = Gtk.Orientation.VERTICAL, spacing = 15
+        )
         self.view.set_size_request(200, 300)
 
         ## Titlebar
         self.header = Adw.HeaderBar.new()
         self.view.append(self.header)
 
-        ## Webview
-        self.webview = WebKit.WebView.new()
-        self.webview.load_uri("https://lite.duckduckgo.com/lite")
-        self.view.append(self.webview)
+        ## Instructions
+        self.instruct_1 = Gtk.Label.new(lang.oauth.instructions_1)
+        self.instruct_1.set_size_request(200, 10)
+        self.instruct_1.set_wrap(True)
+        self.view.append(self.instruct_1)
+        
+        ## Button
+        self.button = Gtk.Button.new_with_label(lang.oauth.login)
+        self.button.set_margin_top(15)
+        self.button.set_margin_end(20)
+        self.button.set_margin_start(20)
+        self.button.connect("clicked", self.open_uri)
+        self.view.append(self.button)
+        
+        ## Instructions 2
+        self.instruct_2 = Gtk.Label.new(lang.oauth.instructions_2)
+        self.instruct_2.set_margin_top(10)
+        self.instruct_2.set_margin_end(15)
+        self.instruct_2.set_margin_start(15)
+        self.instruct_2.set_size_request(150, 25)
+        self.instruct_2.set_wrap(True)
+        self.view.append(self.instruct_2)
+
+        ## GroupMe Logo (for complying with their brand guidelines)
+        self.corpo_greed = Gtk.Image.new_from_file('/app/assets/groupme-dark.png')
+        self.corpo_greed.set_size_request(350, 175)
+        self.view.append(self.corpo_greed)
 
         # Set Content
         self.set_content(self.view)
+    
+    def open_uri(self, button):
+        """ Opens OAuth uri in Browser and closes the app.
+        It will be reopened with a `groupings:login` uri where it can start the OAuth flow. """
+        webbrowser.open_new(oauth.GROUPME_OAUTH_URI)
+        logging.info('Sent user to OAuth URI.')
+        logging.info('Exiting...')
+        sys.exit(0)
+
 
 class MainApp(Adw.Application):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, logged_in: bool = False, token = None, **kwargs):
         super().__init__(*args, **kwargs)
         self.connect('activate', self.on_activate)
+        self.logged_in = logged_in
+        self.token = token
     
     def on_activate(self, app):
-        #self.win = MainWindow(application=app)
-        self.win = LoginWindow(application=app)
+        if self.logged_in and self.token != None:
+            self.win = MainWindow(application=app, token = self.token)
+        else:
+            self.win = LoginWindow(application=app)
         self.win.present()
 
-def run(id: str, *args, **kwargs):
-    logger = logging.getLogger()
-    logger.debug("Starting UI")
-    app = MainApp(application_id=id)
+def run(id: str, *args, logged_in: bool = False, token = None, **kwargs):
+    logging.debug("Starting UI")
+    app = MainApp(application_id=id, logged_in=logged_in, token=token)
     app.run(*args, **kwargs)

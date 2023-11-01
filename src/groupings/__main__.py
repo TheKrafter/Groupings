@@ -20,11 +20,13 @@ APPLICATION_ID = 'xyz.krafterdev.Groupings'
 
 # Main Process
 def main():
-    logger = logging.getLogger()
-    logger.info("Starting Groupings...")
-    logger.debug(f"Arguments: {sys.argv}")
+    logging.info("Starting Groupings...")
+    logging.debug(f"Arguments: {sys.argv}")
 
-    ui.run(APPLICATION_ID)
+    if sys.argv[-1].startswith('groupings:login'):
+        oauth.do_oauth(sys.argv[-1], ui.run, APPLICATION_ID, logged_in=True)
+    else:
+        ui.run(APPLICATION_ID)
 
 if __name__ == '__main__':
     try:
