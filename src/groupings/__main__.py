@@ -11,7 +11,7 @@ import sys
 from groupy import Client
 from groupme_push.client import PushClient
 
-from .internal import ui, oauth
+from .internal import ui, oauth, push
 from .internal.lang import lang
 
 # GLOBAL VARIABLES
@@ -34,7 +34,9 @@ def main():
             logged_in = True
         except ValueError:
             logged_in = False
+        daemon = push.start_daemon()
         ui.run(APPLICATION_ID, logged_in=logged_in, token=token)
+        daemon.terminate()
 
 if __name__ == '__main__':
     try:

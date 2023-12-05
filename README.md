@@ -48,7 +48,6 @@ Documentation:
  - [Adw](https://gnome.pages.gitlab.gnome.org/libadwaita/doc/1.4/index.html)
  - [Gtk4](https://docs.gtk.org/gtk4/index.html)
  - [PyWebkitGTK](https://code.google.com/archive/p/pywebkitgtk/)
- - [keyring_minimal (src)](https://github.com/hrehfeld/python-keyring-minimal/blob/master/keyring_minimal/__init__.py)
 
 
 Generating manifest modules: `python3 ./src/assets/tools/flatpak-pip-generator --yaml -r requirements.txt`
