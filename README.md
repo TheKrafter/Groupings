@@ -41,15 +41,16 @@ Emojis: [How Tuba does it](https://github.com/GeopJr/Tuba/issues/622#issuecommen
 Documentation:
  - [GroupyAPI](http://groupy.readthedocs.org/en/latest/)
  - [groupme-push](https://pypi.org/project/groupme-push/)
+ - [GroupMe Developers]
  - [keyring](https://pypi.org/project/keyring/)
  - [PyXDG](https://pyxdg.readthedocs.io/en/latest/)
  - [PyGOBject](https://lazka.github.io/pgi-docs/)
  - [Adw](https://gnome.pages.gitlab.gnome.org/libadwaita/doc/1.4/index.html)
  - [Gtk4](https://docs.gtk.org/gtk4/index.html)
  - [PyWebkitGTK](https://code.google.com/archive/p/pywebkitgtk/)
+ - [keyring_minimal (src)](https://github.com/hrehfeld/python-keyring-minimal/blob/master/keyring_minimal/__init__.py)
 
-OAuth Flow: take from [TheKrafter/GroupPy](https://github.com/TheKrafter/GroupPy/blob/main/grouppy/__init__.py#L37)
 
-Generating manifest modules: `./src/tools/flatpak-pip-generator --yaml --requirements-file='./requirements.txt'`
+Generating manifest modules: `./src/tools/generate-deps.sh`
 
 </details>
