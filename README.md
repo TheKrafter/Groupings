@@ -41,7 +41,7 @@ Emojis: [How Tuba does it](https://github.com/GeopJr/Tuba/issues/622#issuecommen
 Documentation:
  - [GroupyAPI](http://groupy.readthedocs.org/en/latest/)
  - [groupme-push](https://pypi.org/project/groupme-push/)
- - [GroupMe Developers]
+ - [GroupMe Developers](https://dev.groupme.com/)
  - [keyring](https://pypi.org/project/keyring/)
  - [PyXDG](https://pyxdg.readthedocs.io/en/latest/)
  - [PyGOBject](https://lazka.github.io/pgi-docs/)
