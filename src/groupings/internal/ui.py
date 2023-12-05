@@ -58,7 +58,7 @@ class MainWindow(Adw.ApplicationWindow):
         self.condition = Adw.BreakpointCondition.parse("max-width: 500sp")
         self.breakpoint = Adw.Breakpoint.new(self.condition)
         self.breakpoint.add_setter(self.view, "collapsed", True)
-        #add
+        self.add_breakpoint(self.breakpoint)
 
         # Set Content
         self.set_content(self.view)
