@@ -112,7 +112,7 @@ class LoginWindow(Adw.ApplicationWindow):
 
         ## GroupMe Logo (for complying with their brand guidelines)
         self.corpo_greed = Gtk.Image.new_from_file('/app/assets/groupme-dark.png')
-        self.corpo_greed.set_size_request(700, 350)
+        self.corpo_greed.set_size_request(350, 175)
         self.view.append(self.corpo_greed)
 
         # Set Content
@@ -169,7 +169,7 @@ class FailWindow(Adw.ApplicationWindow):
 
         ## GroupMe Logo (for complying with their brand guidelines)
         self.corpo_greed = Gtk.Image.new_from_file('/app/assets/groupme-dark.png')
-        self.corpo_greed.set_size_request(700, 350)
+        self.corpo_greed.set_size_request(350, 175)
         self.view.append(self.corpo_greed)
 
         # Set Content
