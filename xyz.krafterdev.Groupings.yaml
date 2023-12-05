@@ -2,18 +2,6 @@ app-id: xyz.krafterdev.Groupings
 runtime: org.gnome.Platform
 runtime-version: '45'
 sdk: org.gnome.Sdk
-sdk-extensions:
-  - "org.freedesktop.Sdk.Extension.rust-stable"
-  - "org.freedesktop.Sdk.Extension.llvm16"
-build-options:
-  append-path: "/usr/lib/sdk/rust-stable/bin:/usr/lib/sdk/llvm16/bin"
-  env:
-  - CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_LINKER: "clang"
-  - CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_RUSTFLAGS: "-C link-arg=-fuse-ld=/usr/lib/sdk/rust-stable/bin/mold"
-  - CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: "clang"
-  - CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_RUSTFLAGS: "-C link-arg=-fuse-ld=/usr/lib/sdk/rust-stable/bin/mold"
-  build-args:
-  - --share=network
 command: /app/start/start.sh
 modules:
   - name: python3-chardet
@@ -103,15 +91,6 @@ modules:
       - type: file
         url: https://files.pythonhosted.org/packages/e5/8d/cf41b66a8110670e3ad03dab9b759704eeed07fa96e90fdc0357b2ba70e2/pyxdg-0.28-py2.py3-none-any.whl
         sha256: bdaf595999a0178ecea4052b7f4195569c1ff4d344567bccdc12dfdf02d545ab
-  - name: python3-keyring-minimal
-    buildsystem: simple
-    build-commands:
-      - pip3 install --verbose --exists-action=i --no-index --find-links="file://${PWD}"
-        --prefix=${FLATPAK_DEST} "keyring-minimal~=0.1" --no-build-isolation
-    sources:
-      - type: file
-        url: https://files.pythonhosted.org/packages/bd/8a/14674fcf634c22696c8912fba6aa5eea3aeaeb94b3a0646be36d0c1af4c7/keyring_minimal-0.1-py3-none-any.whl
-        sha256: 1fb0b1bb7361838958856f0a1eff6bff820af1e4d59448a50199e74d19b590ff
 
   # The App Itself.
   - name: groupings

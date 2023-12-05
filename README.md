@@ -51,6 +51,6 @@ Documentation:
  - [keyring_minimal (src)](https://github.com/hrehfeld/python-keyring-minimal/blob/master/keyring_minimal/__init__.py)
 
 
-Generating manifest modules: `./src/tools/generate-deps.sh`
+Generating manifest modules: `python3 ./src/assets/tools/flatpak-pip-generator --yaml -r requirements.txt`
 
 </details>
