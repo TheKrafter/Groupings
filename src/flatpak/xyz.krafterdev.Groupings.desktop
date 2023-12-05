@@ -2,6 +2,7 @@
 Type=Application
 Name=Groupings
 Comment=Chat on GroupMe
+Icon=xyz.krafterdev.Groupings
 GenericName=GroupMe Client
 Exec=/app/start/start.sh %u
 Terminal=false

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>xyz.krafterdev.Groupings</id>
+  
+  <name>Groupings</name>
+  <summary>Chat on GroupMe</summary>
+  
+  <metadata_license>CC-BY-SA-4.0</metadata_license>
+  <project_license>MPL-2.0</project_license>
+  
+  <supports>
+    <control>pointing</control>
+    <control>keyboard</control>
+    <control>touch</control>
+  </supports>
+  
+  <description>
+    <p>
+      Chat on GroupMe
+    </p>
+    <p>
+      Groupings is an Open Source client for the proprietary messaging platform GroupMe.
+    </p>
+  </description>
+  
+  <launchable type="desktop-id">xyz.krafterdev.Groupings.desktop</launchable>
+</component>
