@@ -54,6 +54,12 @@ class MainWindow(Adw.ApplicationWindow):
         self.groups_box.append(Gtk.Label.new(lang.debug.groups_list)) #TODO
         self.view.set_sidebar(self.groups_box)
 
+        # Breakpoint
+        self.condition = Adw.BreakpointCondition.parse("max-width: 500sp")
+        self.breakpoint = Adw.Breakpoint.new(self.condition)
+        self.breakpoint.add_setter(self.view, "collapsed", True)
+        #add
+
         # Set Content
         self.set_content(self.view)
     
