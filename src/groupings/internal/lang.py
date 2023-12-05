@@ -16,6 +16,7 @@ class Lang:
     def __init__(self):
         # Meta Stuff
         self.title = "Groupings"
+        self.id = "xyz.krafterdev.Groupings" # DO NOT TRANSLATE!
         
         # Debugging Labels
         self.debug = Recursion()
@@ -36,8 +37,14 @@ class Lang:
         self.oauth = Recursion()
         self.oauth.title = "Groupings — Log In"
         self.oauth.instructions_1 = "Click the button below to log in."
-        self.oauth.instructions_2 = "Note: GroupMe no longer sends verification codes by SMS. Please check the email address associated with your account for your verification pin number."
+        self.oauth.instructions_2 = "Note: If you do not recieve a verification PIN number via SMS, check the email address associated with your GroupMe account."
         self.oauth.login = "Log In"
+        self.oauth.secret_notes = "Token for GroupMe API, user id: "
+
+        self.oauth.failed = Recursion()
+        self.oauth.failed.title = "Groupings — Login Failed"
+        self.oauth.failed.info = "Failed to log in. This could be because your token expired, GroupMe is unreachable, or there is a problem with this application."
+        self.oauth.failed.retry = "Try Again"
 
 
 lang = Lang()

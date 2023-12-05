@@ -24,9 +24,17 @@ def main():
     logging.debug(f"Arguments: {sys.argv}")
 
     if sys.argv[-1].startswith('groupings:login'):
-        oauth.do_oauth(sys.argv[-1], ui.run, APPLICATION_ID, logged_in=True)
+        try:
+            oauth.do_oauth(sys.argv[-1], ui.run, APPLICATION_ID, logged_in=True)
+        except BaseException as ex:
+            ui.run(APPLICATION_ID, logged_in=False, login_failed=True, login_error=ex)
     else:
-        ui.run(APPLICATION_ID)
+        try:
+            token = oauth.get_token()
+            logged_in = True
+        except ValueError:
+            logged_in = False
+        ui.run(APPLICATION_ID, logged_in=logged_in, token=token)
 
 if __name__ == '__main__':
     try:

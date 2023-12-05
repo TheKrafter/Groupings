@@ -28,10 +28,6 @@ dependencies = [
     "pyxdg >=0.28",
     "groupme-push >=0.0.2",
     "GroupyAPI >=0.10.3",
-    #"cffi >=1.16.0",
-    #"setuptools-rust >=1.8.1",
-    #"keyring >=24.2.0",
-    #"keyring_jeepney >=0.2"
 ]
 
 [project.urls]
