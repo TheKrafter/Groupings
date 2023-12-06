@@ -18,30 +18,51 @@ gi.require_version('Gio', '2.0')
 
 from gi.repository import Gio
 
-def notify(message):
-    """ Send a notification based on a message """
+global application
+application = None
+
+def notify(title: str, body: str, id: str):
+    """ Send a Notification """
+    global application
+
+    notif = Gio.Notification.new(title)
+    notif.set_body(body)
+    notif.set_category("im.recieved")
+    notif.set_priority(Gio.NotificationPriority.HIGH)
+    notif.set_icon(Gio.ThemedIcon.new('xyz.krafterdev.Groupings-symbolic'))
+    print(f'NOTIFICATION: {title}:\nNOTIFICATION:    {message["text"]}')
+
+    application.send_notification(message_id, notif)
+
+def notify_message(message):
+    """ Notify for Messages in Groups """
     client = Client.from_token(get_token())
     title = f'{message["name"]} ({client.groups.get(message["group_id"]).name})'
-    notif = Gio.Notification.new(title)
-    notif.set_body(message["text"])
-    notif.set_category("im.recieved")
-    notif.set_priority(Gio.NOtificationPriority.HIGH)
-    notif.set_icon('xyz.krafterdev.Groupings-symbolic')
-    print(f'NOTIFICATION: {title}:\nNOTIFICATION:    {message["text"]}')
-    notif.show()
-    
 
-def daemon(token: str):
+    notify(title, message["text"], message["id"])
+
+def notify_dm(message):
+    """ Notify for DMs """
+    notify(message["name"], message["text"], message["id"])
+
+def daemon(token: str, app: Gio.Application):
     """ Notification Daemon """
+    global application
+    application = app
 
-    client = PushClient(access_token=token, on_message=notify)
+    client = PushClient(
+        disregard_self = False,
+        access_token = token, 
+        on_message = notify_message,
+        on_dm = notify_dm,
+    )
     client.start()
 
 
-def start_daemon():
+def start_daemon(app: Gio.Application):
     """ Start Notification Daemon """
     token = get_token()
-    p = Process(target=daemon, args=(token,))
+    p = Process(target=daemon, args=(token, app,))
     p.start()
     return p
     

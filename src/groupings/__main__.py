@@ -34,9 +34,7 @@ def main():
             logged_in = True
         except ValueError:
             logged_in = False
-        daemon = push.start_daemon()
         ui.run(APPLICATION_ID, logged_in=logged_in, token=token)
-        daemon.terminate()
 
 if __name__ == '__main__':
     try:

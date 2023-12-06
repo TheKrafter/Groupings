@@ -14,7 +14,7 @@ gi.require_version('Adw', '1')
 from gi.repository import Gtk, Adw
 
 from .lang import lang
-from . import oauth
+from . import oauth, push
 
 class MainWindow(Adw.ApplicationWindow):
     def __init__(self, *args, token = None, **kwargs):
@@ -215,7 +215,7 @@ class MainApp(Adw.Application):
             self.win = LoginWindow(application=app)
         self.win.present()
 
-def run(id: str, *args, logged_in: bool = False, token = None, login_failed: bool = False, login_error = None, **kwargs):
+def run(id: str, *args, logged_in: bool = False, token = None, login_failed: bool = False, login_error = None, run_push: bool = False, **kwargs):
     logging.debug("Starting UI")
     app = MainApp(
         application_id=id, 
@@ -224,4 +224,8 @@ def run(id: str, *args, logged_in: bool = False, token = None, login_failed: boo
         login_failed=login_failed, 
         login_error=login_error
     )
+    if run_push:
+        p = push.start_daemon(app)
     app.run(*args, **kwargs)
+    if run_push:
+        p.terminate()
