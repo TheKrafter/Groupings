@@ -1,5 +1,7 @@
 > NOTE: This branch is a complete rewrite of the client! See the [TODO](TODO.md).
 
+![Groupings Application Icon](src/assets/icons/export/xyz.krafterdev.Groupings.svg)
+
 # Groupings
 
 A GTK4/Libadwaita [GroupMe](https://groupme.com/) client in Python.
