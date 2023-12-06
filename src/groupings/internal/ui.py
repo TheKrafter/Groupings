@@ -24,6 +24,7 @@ class MainWindow(Adw.ApplicationWindow):
 
         self.set_title(lang.title)
         self.set_default_size(850, 500) # Width x Height
+        self.set_size_request(300, 400)
 
         # Interface
         self.view = Adw.OverlaySplitView.new()
