@@ -46,5 +46,9 @@ class Lang:
         self.oauth.failed.info = "Failed to log in. This could be because your token expired, GroupMe is unreachable, or there is a problem with this application."
         self.oauth.failed.retry = "Try Again"
 
+        # Preferences
+        self.pref = Recursion()
+        self.pref.title = 'Preferences'
+        self.pref.description = 'Nothing here yet'
 
 lang = Lang()
