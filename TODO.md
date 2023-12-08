@@ -10,7 +10,7 @@ The complete roadmap for Groupings.
     - [ ] send message dialog
     - [ ] Member list
     - [ ] DMs
-- [ ] Auth/Login from [TheKrafter/GroupPy](https://github.com/TheKrafter/GroupPy/blob/main/grouppy/__init__.py#L37) (then archive)
+- [x] Auth/Login
 - [ ] Load Groups
     - [ ] Add/rm groups (func)
     - [ ] List groups in sidebar
