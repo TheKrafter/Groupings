@@ -2,7 +2,6 @@
 
 The complete roadmap for Groupings.
 
-- [x] Setup basic packaging
 - [ ] Implement UI
     - [ ] Groups list
     - [ ] Former groups list
@@ -43,10 +42,10 @@ The complete roadmap for Groupings.
         - [ ] attach to message
     - [ ] Sending Emojis?
 
-- [ ] Final packaging
-    - [ ] Icon
-    - [ ] `.desktop` file
-    - [ ] Flatpak
+- [x] Packaging
+    - [x] Icon
+    - [x] `.desktop` file
+    - [x] Flatpak
 
 ### Things to NOTE!
 
