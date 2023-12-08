@@ -1,4 +1,4 @@
-> NOTE: This branch is a complete rewrite of the client! See the [TODO](TODO.md).
+> **WARNING:** This project is nowhere near ready for use! See the [TODO](TODO.md).
 
 ![Groupings Application Icon](src/assets/icons/export/xyz.krafterdev.Groupings.svg)
 
