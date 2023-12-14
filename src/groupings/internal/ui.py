@@ -55,10 +55,6 @@ class MainWindow(Adw.ApplicationWindow):
         self.groups_box.append(Gtk.Label.new(lang.debug.groups_list)) #TODO
         self.view.set_sidebar(self.groups_box)
 
-        ## Preferences
-        self.pref_button = Gtk.Button.new_from_icon_name('emblem-system-symbolic')
-
-
         # Breakpoint
         self.condition = Adw.BreakpointCondition.parse("max-width: 500sp")
         self.breakpoint = Adw.Breakpoint.new(self.condition)
@@ -80,9 +76,6 @@ class MainWindow(Adw.ApplicationWindow):
         """ Sets the Title and Subtitle for the Chat pane """
         self.chat_title.set_title(title)
         self.chat_title.set_title(subtitle)
-    
-    def show_pref_pane(self, button):
-        """ Shows the prefrences pane """
         
 
 class LoginWindow(Adw.ApplicationWindow):
