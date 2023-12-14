@@ -122,6 +122,9 @@ class MainWindow(Adw.ApplicationWindow):
         icon = Adw.Avatar.new(16, group.name, True)
         box.append(icon)
         text = Gtk.Box.new(Gtk.Orientation.VERTICAL, 4)
+        text.set_hexpand(True)
+        text.set_vexpand(True)
+        text.set_homogenous(True)
         title = Gtk.Label.new(group.name)
         text.append(title)
         #desc = Gtk.Label.new(
@@ -134,7 +137,11 @@ class MainWindow(Adw.ApplicationWindow):
 
     def populate_groups_list(self):
         """ Populates the list of groups """
-        for group in list(self.client.groups.list()):
+        try:
+            groups = self.client.groups.list()
+        except groupy.exceptions.InvalidJsonError:
+            groups = self.client.groups.list(omit="memberships")
+        for group in groups:
             current = self.construct_group_row(group)
             self.groups_listbox.append(current)
             self.groups[group.id] = current
