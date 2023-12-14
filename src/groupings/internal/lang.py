@@ -43,6 +43,7 @@ class Lang:
         self.oauth.instructions_2 = "Note: If you do not recieve a verification PIN number via SMS, check the email address associated with your GroupMe account."
         self.oauth.login = "Log In"
         self.oauth.secret_notes = "Token for GroupMe API, user id: "
+        self.oauth.secret_title = "Groupings Login Token"
 
         self.oauth.failed = Recursion()
         self.oauth.failed.title = "Groupings — Login Failed"
