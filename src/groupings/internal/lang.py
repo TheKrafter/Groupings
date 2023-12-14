@@ -27,6 +27,9 @@ class Lang:
         # Groups Panel
         self.groups = Recursion()
         self.groups.title = "Groups"
+        self.groups.unavail = "Unavailable"
+        self.groups.error = "Could not fetch groups."
+        self.groups.error_retry = "Try Again"
 
         # Chat Box
         self.chat = Recursion()

@@ -13,6 +13,8 @@ gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
 from gi.repository import Gtk, Adw
 
+from groupy import Client
+
 from .lang import lang
 from . import oauth, push
 
@@ -21,6 +23,8 @@ class MainWindow(Adw.ApplicationWindow):
         """ The Main Window is constructed here. """
         super().__init__(*args, **kwargs)
         self.token = token
+        self.client = Client.from_token(self.token)
+        self.groups = {}
 
         self.set_title(lang.title)
         self.set_default_size(850, 500) # Width x Height
@@ -52,7 +56,37 @@ class MainWindow(Adw.ApplicationWindow):
         self.groups_header = Adw.HeaderBar.new()
         self.groups_title = Adw.WindowTitle.new(lang.groups.title, "")
         self.groups_box.append(self.groups_header)
-        self.groups_box.append(Gtk.Label.new(lang.debug.groups_list)) #TODO
+
+        self.groups_scroll = Gtk.ScrolledWindow.new()
+        self.groups_scroll.set_policy(
+            Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC,
+        )
+        self.groups_stack = Gtk.Stack.new()
+        self.groups_scroll.set_child(self.groups_stack)
+        self.groups_status = Adw.StatusPage.new()
+        self.groups_status.set_icon_name('user-offline-symbolic')
+        self.groups_status.set_title(lang.groups.unavail)
+        self.groups_status.set_description(lang.groups.error)
+        self.groups_status.set_hexpand(True)
+        self.groups_status.set_vexpand(True)
+        self.groups_stack.add_child(self.groups_status)
+        self.groups_list_view = Gtk.Box.new(
+            Gtk.Orientation.VERTICAL, 4
+        )
+        self.groups_stack.add_child(self.groups_list_view)
+        self.groups_listbox = Gtk.ListBox.new()
+        self.groups_listbox.set_vexpand(True)
+        self.groups_list_view.append(self.groups_listbox)
+
+        self.populate_groups_list()
+
+        self.groups_box.append(self.groups_stack)
+        self.groups_stack.set_visible_child(self.groups_list_view)
+
+
+        #self.groups_box.append(Gtk.Label.new(lang.debug.groups_list)) #TODO
+        
+
         self.view.set_sidebar(self.groups_box)
 
         # Breakpoint
@@ -76,6 +110,36 @@ class MainWindow(Adw.ApplicationWindow):
         """ Sets the Title and Subtitle for the Chat pane """
         self.chat_title.set_title(title)
         self.chat_title.set_title(subtitle)
+    
+    def set_current_group(self, groupid):
+        """ Sets the current selected group to display in the message list """
+        print(f'GROUP: {self.client.groups.get(groupid)["name"]} / {groupid}')
+    
+    def construct_group_row(self, group):
+        """ Construct a row item for a group """
+        item = Gtk.ListBoxRow.new()
+        box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 0)
+        icon = Adw.Avatar.new(16, group.name, True)
+        box.append(icon)
+        text = Gtk.Box.new(Gtk.Orientation.VERTICAL, 4)
+        title = Gtk.Label.new(group.name)
+        text.append(title)
+        #desc = Gtk.Label.new(
+        #    f'{group.messages.preview.nickname}: {group.messages.preview.text}'
+        #)
+        #text.append(desc)
+        box.append(text)
+        item.set_child(box)
+        return item
+
+    def populate_groups_list(self):
+        """ Populates the list of groups """
+        for group in list(self.client.groups.list()):
+            current = self.construct_group_row(group)
+            self.groups_listbox.append(current)
+            self.groups[group.id] = current
+
+
         
 
 class LoginWindow(Adw.ApplicationWindow):
