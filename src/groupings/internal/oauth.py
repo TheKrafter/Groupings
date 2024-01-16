@@ -30,6 +30,7 @@ SECRET_SCHEMA = Secret.Schema.new(
     {
         'Title': Secret.SchemaAttributeType.STRING,
         'Notes': Secret.SchemaAttributeType.STRING,
+        'Description': Secret.SchemaAttributeType.STRING,
     }
 )
 
@@ -50,7 +51,8 @@ class OAuthFlow:
 
             attrs = {
                 'Title': GROUPINGS_SYSTEM_NAME,
-                'Notes': lang.oauth.secret_notes + you["id"]
+                'Notes': lang.oauth.secret_notes + you["id"],
+                'Description': lang.oauth.secret_title,
             }
             r = Secret.password_store_sync(
                 SECRET_SCHEMA,

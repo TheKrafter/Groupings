@@ -18,6 +18,8 @@ from gi.repository import Gtk, Adw, Gdk, GdkPixbuf
 from groupy.client import Client
 import groupy.exceptions
 
+from groupy import Client
+
 from .lang import lang
 from . import oauth, push, cache
 
@@ -57,6 +59,8 @@ class MainWindow(Adw.ApplicationWindow):
         """ The Main Window is constructed here. """
         super().__init__(*args, **kwargs)
         self.token = token
+        self.client = Client.from_token(self.token)
+        self.groups = {}
 
         self.set_title(lang.title)
         self.set_default_size(850, 500) # Width x Height
@@ -96,11 +100,17 @@ class MainWindow(Adw.ApplicationWindow):
         self.groups_loadbutton.connect('clicked', self.load_more_groups)
         self.groups_loadbox.append(self.groups_loadbutton)
         self.groups_box.append(self.groups_loadbox)
+
+        self.groups_scroll = Gtk.ScrolledWindow.new()<<<<<<< HEAD
+        self.groups_list = Gtk.Box.new(orientation=Gtk.Orientation.VERTICAL, spacing=2)
+        self.groups_box.append(self.groups_list)
+        self.visible_group_pages = 0
+        self.groups_loadbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
+        self.groups_loadbutton = Gtk.Button.new_with_label(lang.groups.load_more)
+        self.groups_loadbutton.connect('clicked', self.load_more_groups)
+        self.groups_loadbox.append(self.groups_loadbutton)
+        self.groups_box.append(self.groups_loadbox)
         self.view.set_sidebar(self.groups_box)
-
-        ## Preferences
-        self.pref_button = Gtk.Button.new_from_icon_name('emblem-system-symbolic')
-
 
         # Breakpoint
         self.condition = Adw.BreakpointCondition.parse("max-width: 500sp")
