@@ -11,10 +11,46 @@ import gi
 
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
-from gi.repository import Gtk, Adw
+#gi.require_version('Gdk', '4')
+#gi.require_version('GdkPixbuf', '2')
+from gi.repository import Gtk, Adw, Gdk, GdkPixbuf
+
+from groupy.client import Client
+import groupy.exceptions
 
 from .lang import lang
-from . import oauth, push
+from . import oauth, push, cache
+
+class GroupListItem:
+    def __init__(self, group):
+        """ Widget for a Group shown in the list """
+        self.box = Gtk.Box.new(orientation=Gtk.Orientation.HORIZONTAL, spacing=4)
+        # Avatar
+        self.avatar = Adw.Avatar(size=32, text=group.name)
+        avatar_filename = cache.fetch(group.image_url)
+        if avatar_filename != None:
+            self.texture_avatar = Gdk.Texture.new_for_pixbuf(
+                    GdkPixbuf.Pixbuf.new_from_file(filename=avatar_filename)
+                )
+            self.avatar.set_custom_image(self.texture_avatar)
+        self.box.append(self.avatar)
+        # Label
+        self.box_info = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
+        if len(group.name) > 25:
+            title = group.name[0:22].strip() + '...'
+        else:
+            title = group.name
+        self.label_title = Gtk.Label.new(f'<b>{title}</b>')
+        self.label_title.set_use_markup(True)
+        self.box_info.append(self.label_title)
+        self.label_msg = Gtk.Label.new(group.description[0:25].strip())
+        self.box_info.append(self.label_msg)
+        self.box.append(self.box_info)
+
+        self.button = Gtk.Button.new()
+        self.button.set_label(group.name)
+        self.button.set_child(self.box)
+
 
 class MainWindow(Adw.ApplicationWindow):
     def __init__(self, *args, token = None, **kwargs):
@@ -52,7 +88,14 @@ class MainWindow(Adw.ApplicationWindow):
         self.groups_header = Adw.HeaderBar.new()
         self.groups_title = Adw.WindowTitle.new(lang.groups.title, "")
         self.groups_box.append(self.groups_header)
-        self.groups_box.append(Gtk.Label.new(lang.debug.groups_list)) #TODO
+        self.groups_list = Gtk.Box.new(orientation=Gtk.Orientation.VERTICAL, spacing=2)
+        self.groups_box.append(self.groups_list)
+        self.visible_group_pages = 0
+        self.groups_loadbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
+        self.groups_loadbutton = Gtk.Button.new_with_label(lang.groups.load_more)
+        self.groups_loadbutton.connect('clicked', self.load_more_groups)
+        self.groups_loadbox.append(self.groups_loadbutton)
+        self.groups_box.append(self.groups_loadbox)
         self.view.set_sidebar(self.groups_box)
 
         ## Preferences
@@ -67,7 +110,37 @@ class MainWindow(Adw.ApplicationWindow):
 
         # Set Content
         self.set_content(self.view)
+
+        self.selected_group = None
     
+    def init_load(self, *args, **kwargs):
+        """ Loads groups, chats, etc. """
+        try:
+            self.client = Client.from_token(self.token)
+            self.groups = {}
+            #TODO: Remove children of self.groups_list
+            for group in self.client.groups.list():
+                self.groups[group.id] = GroupListItem(group)
+                self.groups[group.id].button.connect('clicked', self.select_group, group.id)
+                self.groups_list.append(self.groups[group.id].button)
+            self.visible_group_pages = 1
+
+        except groupy.exceptions.BadResponse as ex:
+            self.error_dialog(ex, self.init_load())
+            
+    
+    def load_more_groups(self, button):
+        """ Loads more groups when the button is pressed """
+
+
+    def select_group(self, button, group):
+        """ Sets selected group"""
+        self.select_group = group
+        group_obj = self.client.groups.get(group)
+        self.set_chat_titles(
+            group_obj.name, group_obj.description
+        )
+        print(f'Selected GROUP: {group}')
     
     def toggle_sidebar(self, button):
         """ Toggles the sidebar in self.view (Adw.OverlaySplitView) """
@@ -79,10 +152,29 @@ class MainWindow(Adw.ApplicationWindow):
     def set_chat_titles(self, title, subtitle):
         """ Sets the Title and Subtitle for the Chat pane """
         self.chat_title.set_title(title)
-        self.chat_title.set_title(subtitle)
+        self.chat_title.set_subtitle(subtitle)
     
     def show_pref_pane(self, button):
         """ Shows the prefrences pane """
+
+    def error_dialog(self, ex, callback):
+        """ Presents an error dialog """
+        dialog = Adw.MessageDialog.new(self, lang.error.token.title, lang.error.token.description(ex))
+        dialog.add_response('retry', lang.error.token.choice_retry, callback)
+        dialog.add_response('quit', lang.error.token.choice_quit)
+        dialog.set_response_appearance('quit', Adw.ResponseAppearance.DESTRUCTIVE)
+        dialog.set_default_response('retry')
+        dialog.connect('response', self.error_dialog_response)
+        dialog.choose()
+        dialog.response(dialog.get_close_response())
+
+    def error_dialog_response(self, dialog, response, callback):
+        """ Handles response to error dialog """
+        match response:
+            case 'retry':
+                callback()
+            case 'quit':
+                sys.exit(1)
         
 
 class LoginWindow(Adw.ApplicationWindow):
@@ -222,6 +314,7 @@ class MainApp(Adw.Application):
         else:
             self.win = LoginWindow(application=app)
         self.win.present()
+        self.win.init_load()
 
 def run(id: str, *args, logged_in: bool = False, token = None, login_failed: bool = False, login_error = None, run_push: bool = False, **kwargs):
     logging.debug("Starting UI")

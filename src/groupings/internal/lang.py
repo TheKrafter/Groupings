@@ -27,6 +27,7 @@ class Lang:
         # Groups Panel
         self.groups = Recursion()
         self.groups.title = "Groups"
+        self.groups.load_more = '...'
 
         # Chat Box
         self.chat = Recursion()
@@ -50,5 +51,14 @@ class Lang:
         self.pref = Recursion()
         self.pref.title = 'Preferences'
         self.pref.description = 'Nothing here yet'
+
+        # Loading Errors
+        self.error = Recursion()
+        self.error.token = Recursion()
+        self.error.token.title = 'Could Not Fetch Data'
+        self.error.token.description = lambda error: f'Your token may be invalid, or GroupMe may be unreachable.\nError Code: {error}'
+        self.error.token.choice_retry = 'Retry'
+        self.error.token.choice_quit = 'Quit'
+
 
 lang = Lang()
