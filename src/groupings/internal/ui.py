@@ -92,15 +92,6 @@ class MainWindow(Adw.ApplicationWindow):
         self.groups_header = Adw.HeaderBar.new()
         self.groups_title = Adw.WindowTitle.new(lang.groups.title, "")
         self.groups_box.append(self.groups_header)
-        self.groups_list = Gtk.Box.new(orientation=Gtk.Orientation.VERTICAL, spacing=2)
-        self.groups_box.append(self.groups_list)
-        self.visible_group_pages = 0
-        self.groups_loadbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
-        self.groups_loadbutton = Gtk.Button.new_with_label(lang.groups.load_more)
-        self.groups_loadbutton.connect('clicked', self.load_more_groups)
-        self.groups_loadbox.append(self.groups_loadbutton)
-        self.groups_box.append(self.groups_loadbox)
-
         self.groups_scroll = Gtk.ScrolledWindow.new()
         self.groups_list = Gtk.Box.new(orientation=Gtk.Orientation.VERTICAL, spacing=2)
         self.groups_box.append(self.groups_list)
