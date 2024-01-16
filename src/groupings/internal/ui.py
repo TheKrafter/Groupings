@@ -141,7 +141,7 @@ class MainWindow(Adw.ApplicationWindow):
         self.set_chat_titles(
             group_obj.name, group_obj.description
         )
-        print(f'Selected GROUP: {group}')
+        print(f'Selected GROUP: {group}') #TODO: rm debug print
     
     def toggle_sidebar(self, button):
         """ Toggles the sidebar in self.view (Adw.OverlaySplitView) """
