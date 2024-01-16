@@ -101,7 +101,7 @@ class MainWindow(Adw.ApplicationWindow):
         self.groups_loadbox.append(self.groups_loadbutton)
         self.groups_box.append(self.groups_loadbox)
 
-        self.groups_scroll = Gtk.ScrolledWindow.new()<<<<<<< HEAD
+        self.groups_scroll = Gtk.ScrolledWindow.new()
         self.groups_list = Gtk.Box.new(orientation=Gtk.Orientation.VERTICAL, spacing=2)
         self.groups_box.append(self.groups_list)
         self.visible_group_pages = 0
