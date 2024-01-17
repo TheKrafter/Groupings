@@ -60,6 +60,7 @@ class Lang:
         self.error.token.description = lambda error: f'Your token may be invalid, or GroupMe may be unreachable.\nError Code: {error}'
         self.error.token.choice_retry = 'Retry'
         self.error.token.choice_quit = 'Quit'
+        self.error.token.choice_cancel = 'Cancel'
 
 
 lang = Lang()

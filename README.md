@@ -52,6 +52,6 @@ Documentation:
  - [PyWebkitGTK](https://code.google.com/archive/p/pywebkitgtk/)
 
 
-Generating manifest modules: `python3 ./src/assets/tools/flatpak-pip-generator --yaml -r requirements.txt`
+Generating manifest modules: `python3 ./src/tools/flatpak-pip-generator --yaml -r requirements.txt`
 
 </details>

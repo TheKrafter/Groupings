@@ -49,15 +49,22 @@ class GroupListItem:
             title = group.name
         self.label_title = Gtk.Label.new(f'<span weight="bold">{title}</span>')
         self.label_title.set_use_markup(True)
+        self.label_title.set_halign(Gtk.Align.START)
         self.box_info.append(self.label_title)
         self.label_msg = Gtk.Label.new(f'<span weight="normal">{group.description[0:25].strip()}</span>')
         self.label_msg.set_use_markup(True)
+        self.label_msg.set_halign(Gtk.Align.START)
         self.box_info.append(self.label_msg)
         self.box.append(self.box_info)
 
         self.button = Gtk.Button.new()
         self.button.set_label(group.name)
         self.button.set_child(self.box)
+
+class ProfileDetailsDialog:
+    def __init__(self, user):
+        self.dialog = Adw.MessageDialog.new(user.nickname, )
+
 
 class MessageListItem:
     def __init__(self, message, previous: Optional[Any]):
@@ -75,12 +82,15 @@ class MessageListItem:
             self.avatar_box.append(self.avatar)
             avatar_set = True
         if not message.system:
-            if previous is None:
-                if str(previous.user_id) == str(message.user_id):
-                    do_avatar = False
+            try:
+                if previous is None:
+                    if str(previous.user_id) == str(message.user_id):
+                        do_avatar = False
+                    else:
+                        do_avatar = True
                 else:
                     do_avatar = True
-            else:
+            except AttributeError:
                 do_avatar = True
             if do_avatar:
                 self.avatar = Adw.Avatar.new(24, message.name, True)
@@ -105,25 +115,29 @@ class MessageListItem:
         # Username & Message
         self.box_msg = Gtk.Box.new(orientation=Gtk.Orientation.VERTICAL, spacing=4)
         if avatar_set and not message.system:
-            self.label_username = Gtk.Label.new(f'<span weight="bold">{message.name}</span>')
+            self.label_username = Gtk.Label.new(
+                f'<span weight="bold">{message.name}</span> ' +
+                f'<span weight="ultralight" size="small">— {message.created_at.strftime("%a %d %b %Y, %I:%M %p")}</span>'
+            )
             self.label_username.set_use_markup(True)
             self.label_username.set_halign(Gtk.Align.START)
             self.box_msg.append(self.label_username)
         if message.system:
-            weight = "light"
+            text = f'<span weight="light"><i>{message.text}</i></span>'
         else:
-            weight = "normal"
-        self.label_message = Gtk.Label.new(f'<span weight="{weight}">{message.text}</span>')
+            text = f'<span weight="normal">{message.text}</span>'
+        self.label_message = Gtk.Label.new(text)
         self.label_message.set_use_markup(True)
         self.label_message.set_wrap(True)
-        if not message.system:
-            self.label_message.set_halign(Gtk.Align.START)
+        self.label_message.set_halign(Gtk.Align.START)
+        if message.system:
+            self.label_message.set_valign(Gtk.Align.CENTER)
         self.box_msg.append(self.label_message)
 
         self.box_msg.set_hexpand(True)
 
         self.box.append(self.box_msg)
-                
+
 class LoginWindow(Adw.ApplicationWindow):
     def __init__(self, *args, **kwargs):
         """ Window for Logging in. """
@@ -193,7 +207,7 @@ class MainWindow(Adw.ApplicationWindow):
 
         self.set_title(lang.title)
         self.set_default_size(850, 500) # Width x Height
-        self.set_size_request(300, 400)
+        self.set_size_request(300, 500)
 
         # Interface
         self.view = Adw.OverlaySplitView.new()
@@ -217,9 +231,34 @@ class MainWindow(Adw.ApplicationWindow):
         )
         self.chat_viewport = Gtk.Viewport.new()
         self.chat_list = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
+        self.chat_list.set_hexpand(True)
+        self.chat_list.set_vexpand(True)
         self.chat_viewport.set_child(self.chat_list)
         self.chat_scrolledwindow.set_child(self.chat_viewport)
         self.chat_box.append(self.chat_scrolledwindow)
+
+        ### Send Box
+        self.send_box = Gtk.Box.new(
+            orientation=Gtk.Orientation.HORIZONTAL, spacing=4
+        )
+        self.send_box.set_size_request(300, 20)
+        self.send_box.set_vexpand(False)
+        self.send_box.set_hexpand(True)
+        self.send_entry = Adw.EntryRow.new()
+        self.send_entry.set_input_purpose(Gtk.InputPurpose.FREE_FORM)
+        self.send_entry.set_show_apply_button(False)
+        self.send_entry.set_enable_emoji_completion(True)
+        self.send_entry.connect("entry-activated", self.scroll_down)
+        self.send_entry.set_hexpand(True)
+        self.send_button = Gtk.Button.new_from_icon_name('send-to-symbolic')
+        self.send_button.connect("clicked", self.message_send_entry)
+        self.send_button.set_size_request(20, 20)
+        self.send_button.set_vexpand(False)
+        self.send_button.set_hexpand(False)
+        self.send_box.append(self.send_entry)
+        self.send_box.append(self.send_button)
+
+        self.chat_box.append(self.send_box)
         self.view.set_content(self.chat_box)
 
         ## Groups List
@@ -272,6 +311,7 @@ class MainWindow(Adw.ApplicationWindow):
 
         self.selected_group = None
         self.oldest_message = None
+        self.sticky = True
     
     def init_load(self, *args, **kwargs):
         """ Loads groups, chats, etc. """
@@ -281,7 +321,7 @@ class MainWindow(Adw.ApplicationWindow):
             #TODO: Remove children of self.groups_list
             first = None
             for group in self.client.groups.list():
-                if first != None:
+                if first == None:
                     first = group.id
                 self.groups[group.id] = GroupListItem(group)
                 self.groups[group.id].button.connect('clicked', self.select_group, group.id)
@@ -290,11 +330,13 @@ class MainWindow(Adw.ApplicationWindow):
         except groupy.exceptions.BadResponse as ex:
             self.error_dialog(ex, self.init_load())
         
-        self.select_group(None, first)
+        self.setup_chat_autoscroll()
+        self.view.set_show_sidebar(True)
             
     
     def load_more_groups(self, button):
         """ Loads more groups when the button is pressed """
+        logging.warning('LOAD_MORE_GROUPS') #TODO
 
 
     def select_group(self, button, group):
@@ -304,7 +346,7 @@ class MainWindow(Adw.ApplicationWindow):
         self.set_chat_titles(
             group_obj.name, group_obj.description
         )
-        print(f'Selected GROUP: {group}') #TODO: rm debug print
+        logging.warning(f'SELECTED GROUP: {group}') #TODO: rm debug print
         child = self.chat_list.get_first_child()
         while child != None:
             self.chat_list.remove(child)
@@ -319,12 +361,46 @@ class MainWindow(Adw.ApplicationWindow):
             self.chat_list.prepend(msg)
             prev = message
         
+        self.sticky = True
+        self.send_entry.grab_focus_without_selecting()
+
+        time.sleep(0.1)
+        self.scroll_down(override=True)
+    
+    def add_new_message(self, message):
+        msg = MessageListItem(message, prev).box
+        self.chat_list.prepend(msg)
         self.scroll_down()
     
-    def scroll_down(self):
-        """ Scrolls to bottom of self.chat_scrolledwindow"""
+    def setup_chat_autoscroll(self):
         adj = self.chat_scrolledwindow.get_vadjustment()
-        adj.set_value(adj.get_upper())
+        adj.connect("value-changed", self.set_chat_sticky)
+
+    def set_chat_sticky(self, x: Optional[Any]):
+        adj = self.chat_scrolledwindow.get_vadjustment()
+        self.sticky = adj.get_value() + adj.get_page_size() >= adj.get_upper()
+        logging.warning(f'STICKY : {self.sticky}') #TODO
+
+    def scroll_down(self, *args, override=False, **kwargs):
+        """ Scrolls to bottom of self.chat_scrolledwindow"""
+        if self.sticky or override:
+            ## XXX: Need to sleep to prevent segfault: <https://gitlab.gnome.org/GNOME/gtk/-/issues/5763>
+            #time.sleep(0.1)
+            self.chat_scrolledwindow.emit("scroll-child", Gtk.ScrollType.END, False)
+
+    def message_send_entry(self, widget):
+        """ Posts content of self.send_entry to current guild """
+        text = self.send_entry.get_text()
+        self.send_entry.set_text('')
+        try:
+            group = self.client.groups.get(self.selected_group)
+            message = group.post(text=text)
+            self.add_new_message(message)
+            self.scroll_down()
+        except groupy.exceptions.BadResponse as ex:
+            self.error_dialog(ex, self.message_send_entry, widget, quittable=False, retryable=False)
+        except TypeError:
+            self.error_dialog('Invalid Response on Message Send', self.message_send_entry, widget, quittable=False, retryable=False)
 
     def toggle_sidebar(self, button):
         """ Toggles the sidebar in self.view (Adw.OverlaySplitView) """
@@ -341,24 +417,38 @@ class MainWindow(Adw.ApplicationWindow):
     def show_pref_pane(self, button):
         """ Shows the prefrences pane """
 
-    def error_dialog(self, ex, callback):
+    def error_dialog(self, ex, callback, *args, quittable=True, retryable=True, **kwargs):
         """ Presents an error dialog """
         dialog = Adw.MessageDialog.new(self, lang.error.token.title, lang.error.token.description(ex))
-        dialog.add_response('retry', lang.error.token.choice_retry, callback)
-        dialog.add_response('quit', lang.error.token.choice_quit)
-        dialog.set_response_appearance('quit', Adw.ResponseAppearance.DESTRUCTIVE)
-        dialog.set_default_response('retry')
-        dialog.connect('response', self.error_dialog_response)
+        if retryable:
+            dialog.add_response('retry', lang.error.token.choice_retry)
+        if quittable:
+            dialog.add_response('quit', lang.error.token.choice_quit)
+            dialog.set_response_appearance('quit', Adw.ResponseAppearance.DESTRUCTIVE)
+        else:
+            dialog.add_response('cancel', lang.error.token.choice_cancel)
+            dialog.set_response_appearance('cancel', Adw.ResponseAppearance.SUGGESTED)
+
+        if retryable:
+            dialog.set_default_response('retry')
+        elif quittable:
+            dialog.set_default_response('quit')
+        else:
+            dialog.set_default_response('cancel')
+
+        dialog.connect('response', self.error_dialog_response, callback, *args, **kwargs)
         dialog.choose()
         dialog.response(dialog.get_close_response())
 
-    def error_dialog_response(self, dialog, response, callback):
+    def error_dialog_response(self, dialog, response, callback, *args, **kwargs):
         """ Handles response to error dialog """
         match response:
             case 'retry':
-                callback()
+                callback(*args, **kwargs)
             case 'quit':
                 sys.exit(1)
+            case 'cancel':
+                return
     
     def logout(self, button, out=False):
         if out:
