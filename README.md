@@ -39,6 +39,7 @@ Groupings Copyright (c) 2023 Krafter, is distributed subject to the Mozilla Publ
 ###### Notes for Devs
 
 Emojis: [How Tuba does it](https://github.com/GeopJr/Tuba/issues/622#issuecomment-1781663957) 
+Scrolling Chat: [In Flare](https://gitlab.com/schmiddi-on-mobile/flare/-/blob/master/src/gui/channel_messages.rs#L118)
 
 Documentation:
  - [GroupyAPI](http://groupy.readthedocs.org/en/latest/)
