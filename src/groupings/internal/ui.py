@@ -393,8 +393,9 @@ class MainWindow(Adw.ApplicationWindow):
         text = self.send_entry.get_text()
         self.send_entry.set_text('')
         try:
-            group = self.client.groups.get(self.selected_group)
+            group = self.client.groups.get(self.selected_group) #TODO: keeps getting the wrong thing (?)
             message = group.post(text=text)
+            print(f"MESSAGE RESPONSE: {message}") #TODO
             self.add_new_message(message)
             self.scroll_down()
         except groupy.exceptions.BadResponse as ex:
@@ -415,7 +416,7 @@ class MainWindow(Adw.ApplicationWindow):
         self.chat_title.set_subtitle(subtitle)
     
     def show_pref_pane(self, button):
-        """ Shows the prefrences pane """
+        """ Shows the preferences pane """
 
     def error_dialog(self, ex, callback, *args, quittable=True, retryable=True, **kwargs):
         """ Presents an error dialog """
