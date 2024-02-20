@@ -233,6 +233,9 @@ class MainWindow(Adw.ApplicationWindow):
         self.chat_list = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
         self.chat_list.set_hexpand(True)
         self.chat_list.set_vexpand(True)
+        self.chat_top_spacing = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
+        self.chat_top_spacing.set_vexpand(True)
+        self.chat_list.append(self.chat_top_spacing)
         self.chat_viewport.set_child(self.chat_list)
         self.chat_scrolledwindow.set_child(self.chat_viewport)
         self.chat_box.append(self.chat_scrolledwindow)
@@ -310,6 +313,7 @@ class MainWindow(Adw.ApplicationWindow):
         self.set_content(self.view)
 
         self.selected_group = None
+        self.typed_store = {}
         self.oldest_message = None
         self.sticky = True
     
@@ -341,7 +345,13 @@ class MainWindow(Adw.ApplicationWindow):
 
     def select_group(self, button, group):
         """ Sets selected group"""
-        self.select_group = group
+        self.typed_store[str(self.selected_group)] = self.send_entry.get_text() # Save what the user has typed
+        if str(group) in self.typed_store:
+            self.send_entry.set_text(self.typed_store[str(group)]) # Restore what the user has typed when in this group
+            self.send_entry.set_position(-1)
+        else:
+            self.send_entry.set_text('')
+        self.selected_group = group
         group_obj = self.client.groups.get(group)
         self.set_chat_titles(
             group_obj.name, group_obj.description
@@ -368,7 +378,7 @@ class MainWindow(Adw.ApplicationWindow):
         self.scroll_down(override=True)
     
     def add_new_message(self, message):
-        msg = MessageListItem(message, prev).box
+        msg = MessageListItem(message).box
         self.chat_list.prepend(msg)
         self.scroll_down()
     
@@ -383,19 +393,21 @@ class MainWindow(Adw.ApplicationWindow):
 
     def scroll_down(self, *args, override=False, **kwargs):
         """ Scrolls to bottom of self.chat_scrolledwindow"""
-        if self.sticky or override:
+        #if self.sticky or override: #TODO
             ## XXX: Need to sleep to prevent segfault: <https://gitlab.gnome.org/GNOME/gtk/-/issues/5763>
-            #time.sleep(0.1)
-            self.chat_scrolledwindow.emit("scroll-child", Gtk.ScrollType.END, False)
+        time.sleep(0.1)
+        self.chat_scrolledwindow.emit("scroll-child", Gtk.ScrollType.END, False)
 
     def message_send_entry(self, widget):
         """ Posts content of self.send_entry to current guild """
         text = self.send_entry.get_text()
         self.send_entry.set_text('')
         try:
+            print(f"SENDING MESSAGE!\n GROUP: '{self.select_group}'") #TODO
             group = self.client.groups.get(self.selected_group) #TODO: keeps getting the wrong thing (?)
+            print(f" GROUP OBJ: '{group}'") #TODO
             message = group.post(text=text)
-            print(f"MESSAGE RESPONSE: {message}") #TODO
+            print(f" MESSAGE RESPONSE: '{message}'") #TODO
             self.add_new_message(message)
             self.scroll_down()
         except groupy.exceptions.BadResponse as ex:
