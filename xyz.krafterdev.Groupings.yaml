@@ -49,8 +49,8 @@ modules:
         sha256: 9f2a07e8be30a0729e533ec968016807069991ae2fd921a78d42f429ae5f4463
       - &id005
         type: file
-        url: https://files.pythonhosted.org/packages/88/75/311454fd3317aefe18415f04568edc20218453b709c63c58b9292c71be17/urllib3-2.2.0-py3-none-any.whl
-        sha256: ce3711610ddce217e6d113a2732fafad960a03fd0318c91faa79481e35c11224
+        url: https://files.pythonhosted.org/packages/a2/73/a68704750a7679d0b6d3ad7aa8d4da8e14e151ae82e6fee774e6e0d05ec8/urllib3-2.2.1-py3-none-any.whl
+        sha256: 450b20ec296a467077128bff42b73080516e71b56ff59a60a02bef2232c4fa9d
   - name: python3-groupme-push
     buildsystem: simple
     build-commands:
@@ -80,6 +80,25 @@ modules:
       - type: file
         url: https://files.pythonhosted.org/packages/e5/8d/cf41b66a8110670e3ad03dab9b759704eeed07fa96e90fdc0357b2ba70e2/pyxdg-0.28-py2.py3-none-any.whl
         sha256: bdaf595999a0178ecea4052b7f4195569c1ff4d344567bccdc12dfdf02d545ab
+  - name: python3-urlextract
+    buildsystem: simple
+    build-commands:
+      - pip3 install --verbose --exists-action=i --no-index --find-links="file://${PWD}"
+        --prefix=${FLATPAK_DEST} "urlextract~=1.8.0" --no-build-isolation
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/81/54/84d42a0bee35edba99dee7b59a8d4970eccdd44b99fe728ed912106fc781/filelock-3.13.1-py3-none-any.whl
+        sha256: 57dbda9b35157b05fb3e58ee91448612eb674172fab98ee235ccb0b5bee19a1c
+      - *id003
+      - type: file
+        url: https://files.pythonhosted.org/packages/55/72/4898c44ee9ea6f43396fbc23d9bfaf3d06e01b83698bdf2e4c919deceb7c/platformdirs-4.2.0-py3-none-any.whl
+        sha256: 0614df2a2f37e1a662acbd8e2b25b92ccf8632929bc6d43467e17fe89c75e068
+      - type: file
+        url: https://files.pythonhosted.org/packages/6b/ff/b16f225ceeb47f5d8899371ce446a8d6c1fe509a8882998b869f2a794c25/uritools-4.0.2-py3-none-any.whl
+        sha256: 607b15eae1e7b69a120f463a7d98f91a56671e1ab92aae13f8e1f25c017fe60e
+      - type: file
+        url: https://files.pythonhosted.org/packages/71/cd/884ee7fcb7be3f3354539368da1e9419639a369f85c83f340fa21e504992/urlextract-1.8.0-py3-none-any.whl
+        sha256: 98b38aca4a555116e8b46e5a134b9e4e54e351b8e37169d2857730d1d0ce42c7
 
   # Fork of GroupyAPI with updated requests dependency
   - name: python3-GroupyAPI-thekrafter

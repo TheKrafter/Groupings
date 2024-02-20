@@ -28,6 +28,7 @@ dependencies = [
     "pyxdg >=0.28",
     "groupme-push >=0.0.2",
     "GroupyAPI >=0.10.3",
+    "urlextract >=1.8.0"
 ]
 
 [project.urls]

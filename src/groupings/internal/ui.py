@@ -389,7 +389,6 @@ class MainWindow(Adw.ApplicationWindow):
     def set_chat_sticky(self, x: Optional[Any]):
         adj = self.chat_scrolledwindow.get_vadjustment()
         self.sticky = adj.get_value() + adj.get_page_size() >= adj.get_upper()
-        logging.warning(f'STICKY : {self.sticky}') #TODO
 
     def scroll_down(self, *args, override=False, **kwargs):
         """ Scrolls to bottom of self.chat_scrolledwindow"""
