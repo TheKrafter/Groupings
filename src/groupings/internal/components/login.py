@@ -11,9 +11,7 @@ import gi
 
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
-#gi.require_version('Gdk', '4')
-#gi.require_version('GdkPixbuf', '2')
-from gi.repository import Gtk, Adw, Gdk, GdkPixbuf
+from gi.repository import Gtk, Adw
 
 from ..lang import lang
 
