@@ -3,28 +3,28 @@
 The complete roadmap for Groupings.
 
 - [ ] Implement UI
-    - [ ] Groups list
+    - [x] Groups list
     - [ ] Former groups list
-    - [ ] Messages page
-    - [ ] send message dialog
+    - [x] Messages page
+    - [x] send message dialog
     - [ ] Member list
     - [ ] DMs
 - [x] Auth/Login
 - [ ] Load Groups
-    - [ ] Add/rm groups (func)
-    - [ ] List groups in sidebar
-        - [ ] with Icons
-    - [ ] Switch message pane to that group
+    - [ ] Add/rm groups
+    - [x] List groups in sidebar
+        - [x] with Icons
+    - [x] Switch message pane to that group
     - [ ] List of former groups
 - [ ] Load Messages in Group
     - [ ] Message
-        - [ ] Text
-        - [ ] Author
+        - [x] Text
+        - [x] Author
+            - [ ] Profile view
         - [ ] Attachments
         - [ ] Emojis! [how to display](https://github.com/GeopJr/Tuba/issues/622#issuecomment-1781663957) and [GroupyAPI docs for emojis](https://groupy.readthedocs.io/en/latest/pages/api.html?highlight=emoji#groupy.api.attachments.Emoji)
         - [ ] Likes (w/ func to add/rm by msg ID & user)
-    - [ ] List of groups in message pane
-    - [ ] func to add messages
+    - [x] func to add messages
     - [ ] func to rm/edit messages (by ID)
 - [ ] Push
     - [ ] add messages + likes to currently open Group
@@ -34,13 +34,13 @@ The complete roadmap for Groupings.
         - [ ] Ignore messages sent by self
 - [ ] Send messages
     - NOTE: Do NOT add messages manually to the messages list.
-    - [ ] Ensure msg is sent in current selected group
-    - [ ] Send contents of input box
+    - [x] Ensure msg is sent in current selected group
+    - [x] Send contents of input box
     - [ ] Attachments
         - [ ] File chooser portal
         - [ ] Upload file
         - [ ] attach to message
-    - [ ] Sending Emojis?
+<!--- Just use unicode emojis.   - [ ] Sending Emojis? --->
 
 - [x] Packaging
     - [x] Icon
