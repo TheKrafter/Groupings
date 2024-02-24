@@ -133,7 +133,9 @@ modules:
       - install -D ./src/flatpak/start.sh /app/start/start.sh
       - chmod +x /app/start/start.sh
       # Copy Assets
-      - cp -r src/assets/ /app/assets/
+      - mkdir /app/assets/
+      - cp src/assets/groupme-dark.png /app/assets/groupme-dark.png
+      - cp src/assets/groupme.png /app/assets/groupme.png
     sources:
       - type: dir
         path: ./
