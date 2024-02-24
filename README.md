@@ -30,7 +30,7 @@ Groupings is currently only supported as a flatpak.
 
 ## Licenses
 
-Groupings Copyright (c) 2023 Krafter, is distributed subject to the Mozilla Public License version 2.0 or later.
+Groupings Copyright (c) 2024 Krafter, is distributed subject to the Mozilla Public License version 2.0 or later.
 
 `flatpak-pip-generator` is licensed subject to the MPL license.
 

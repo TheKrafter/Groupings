@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  Groupings - GTK4/Libadwaita GroupMe Client
+  Copyright (c) 2024 Krafter - krafterdev.xyz
+  Licensed subject to the MPL version 2.0 or Later
+  
+  Metainfo file
+
+  See: https://docs.flathub.org/docs/for-app-authors/metainfo-guidelines/
+ -->
 <component type="desktop-application">
   <id>xyz.krafterdev.Groupings</id>
   
@@ -7,6 +16,10 @@
   
   <metadata_license>CC-BY-SA-4.0</metadata_license>
   <project_license>MPL-2.0</project_license>
+
+  <developer id="xyz.krafterdev">
+    <name>Krafter</name>
+  </developer>
   
   <supports>
     <control>pointing</control>
@@ -16,12 +29,21 @@
   
   <description>
     <p>
-      Chat on GroupMe
-    </p>
-    <p>
-      Groupings is an Open Source client for the proprietary messaging platform GroupMe.
+      Groupings is an Open Source client for the proprietary messaging platform GroupMe, designed with elegance, simplicity, and Mobile Linux in mind.
     </p>
   </description>
   
   <launchable type="desktop-id">xyz.krafterdev.Groupings.desktop</launchable>
+
+  <content_rating type="oars-1.1">
+    <content_attribute id="social-chat">intense</content_attribute>
+    <content_attribute id="social-info">mild</content_attribute>
+    <content_attribute id="social-location">intense</content_attribute>
+    <content_attribute id="social-contacts">intense</content_attribute>
+  </content_rating>
+
+  <url type="bugtracker">https://github.com/TheKrafter/Groupings/issues</url>
+  <url type="homepage">https://github.com/TheKrafter/Groupings</url>
+  <!-- <url type="donation">https://ko-fi.org/krafter</url> -->
+
 </component>
