@@ -1,6 +1,6 @@
 # 
 # Groupings - GTK4/Libadwaita GroupMe Client
-# Copyright (c) 2023 Krafter - krafterdev.xyz
+# Copyright (c) 2024 Krafter - krafterdev.xyz
 # Licensed subject to the MPL version 2.0 or Later
 # 
 import logging
@@ -16,6 +16,7 @@ gi.require_version('Adw', '1')
 from gi.repository import Gtk, Adw
 
 from .components import login, client
+from . import push
 
 
 class MainApp(Adw.Application):
@@ -55,6 +56,10 @@ def run(id: str, *args, logged_in: bool = False, token = None, login_failed: boo
         login_failed=login_failed, 
         login_error=login_error
     )
+    if app.register():
+        logging.debug('Succesfully registered application.')
+    else:
+        logging.warning('Application not registered successfully.')
     if run_push:
         p = push.start_daemon(app)
     app.run(*args, **kwargs)

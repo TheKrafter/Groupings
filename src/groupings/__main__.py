@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # 
 # Groupings - GTK4/Libadwaita GroupMe Client
-# Copyright (c) 2023 Krafter - krafterdev.xyz
+# Copyright (c) 2024 Krafter - krafterdev.xyz
 # Licensed subject to the MPL version 2.0 or Later
 # 
 import logging
@@ -34,7 +34,7 @@ def main():
             logged_in = True
         except ValueError:
             logged_in = False
-        ui.run(APPLICATION_ID, logged_in=logged_in, token=token)
+        ui.run(APPLICATION_ID, logged_in=logged_in, token=token, run_push=True)
 
 if __name__ == '__main__':
     try:
