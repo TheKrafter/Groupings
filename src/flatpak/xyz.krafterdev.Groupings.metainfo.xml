@@ -18,6 +18,10 @@
     <control>keyboard</control>
     <control>touch</control>
   </supports>
+
+  <provides>
+    <mediatype>x-scheme-handler/groupings</mediatype>
+  </provides>
   
   <description>
     <p>
