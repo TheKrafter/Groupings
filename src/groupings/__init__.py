@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # 
 # Groupings - GTK4/Libadwaita GroupMe Client
-# Copyright (c) 2023 Krafter - krafterdev.xyz
+# Copyright (c) 2024 Krafter - krafterdev.xyz
 # Licensed subject to the MPL version 2.0 or Later
 # 
 
