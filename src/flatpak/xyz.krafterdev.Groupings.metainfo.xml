@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- 
-  Groupings - GTK4/Libadwaita GroupMe Client
-  Copyright (c) 2024 Krafter - krafterdev.xyz
-  Licensed subject to the MPL version 2.0 or Later
-  
-  Metainfo file
-
-  See: https://docs.flathub.org/docs/for-app-authors/metainfo-guidelines/
- -->
+<!-- Copyright 2024 Krafter -->
 <component type="desktop-application">
   <id>xyz.krafterdev.Groupings</id>
   
@@ -44,6 +36,32 @@
 
   <url type="bugtracker">https://github.com/TheKrafter/Groupings/issues</url>
   <url type="homepage">https://github.com/TheKrafter/Groupings</url>
+  <url type="vcs-browser">https://github.com/TheKrafter/Groupings</url>
   <!-- <url type="donation">https://ko-fi.org/krafter</url> -->
 
+  <!-- Screenshot URL Scheme: https://raw.githubusercontent.com/TheKrafter/Groupings/{FULL COMMIT ID}/src/assets/screenshots/{SCREENSHOT FILENAME} -->
+  <screenshots>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/TheKrafter/Groupings/6d8f3245de90123203dde0c0688d558142474502/src/assets/screenshots/0.chat-empty.png</image>
+      <caption>A list of groups on the left and an empty chat list on the right with the title 'Chat: Select a group'.</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/TheKrafter/Groupings/315d0598e2a2bf7294d52175d3f9c1792a330842/src/assets/screenshots/1.chat.png</image>
+      <caption>A list of groups on the left and the chat messages of the currently open group on the right</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/TheKrafter/Groupings/315d0598e2a2bf7294d52175d3f9c1792a330842/src/assets/screenshots/2.mobile-chat.png</image>
+      <caption>Chat window resized for a mobile form factor with the groups list hidden</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/TheKrafter/Groupings/315d0598e2a2bf7294d52175d3f9c1792a330842/src/assets/screenshots/3.mobile-groups.png</image>
+      <caption>Mobile chat window, with the list of groups visible in an overlapping sidebar</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/TheKrafter/Groupings/315d0598e2a2bf7294d52175d3f9c1792a330842/src/assets/screenshots/4.login.png</image>
+      <caption>Login window, showing a 'Log In' button and the GroupMe logo</caption>
+    </screenshot>
+  </screenshots>
+
 </component>
+<!-- See: https://docs.flathub.org/docs/for-app-authors/metainfo-guidelines/ -->
