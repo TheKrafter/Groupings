@@ -1,6 +1,6 @@
 # 
 # Groupings - GTK4/Libadwaita GroupMe Client
-# Copyright (c) 2023 Krafter - krafterdev.xyz
+# Copyright (c) 2024 Krafter - krafterdev.xyz
 # Licensed subject to the MPL version 2.0 or Later
 # 
 import logging
@@ -30,9 +30,9 @@ def notify(title: str, body: str, id: str):
     notif.set_category("im.recieved")
     notif.set_priority(Gio.NotificationPriority.HIGH)
     notif.set_icon(Gio.ThemedIcon.new('xyz.krafterdev.Groupings-symbolic'))
-    print(f'NOTIFICATION: {title}:\nNOTIFICATION:    {message["text"]}')
+    print(f'NOTIFICATION: {title}:\nNOTIFICATION: > {body}')
 
-    application.send_notification(message_id, notif)
+    application.send_notification(id, notif)
 
 def notify_message(message):
     """ Notify for Messages in Groups """
