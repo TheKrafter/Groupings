@@ -46,6 +46,7 @@ class MainApp(Adw.Application):
         self.win.present()
         if main:
             self.win.init_load()
+            self.push = push.start_daemon(app)
 
 def run(id: str, *args, logged_in: bool = False, token = None, login_failed: bool = False, login_error = None, run_push: bool = False, **kwargs):
     logging.debug("Starting UI")
@@ -60,8 +61,9 @@ def run(id: str, *args, logged_in: bool = False, token = None, login_failed: boo
         logging.debug('Succesfully registered application.')
     else:
         logging.warning('Application not registered successfully.')
-    if run_push:
-        p = push.start_daemon(app)
     app.run(*args, **kwargs)
     if run_push:
-        p.terminate()
+        try:
+            app.push.terminate()
+        except AttributeError:
+            pass

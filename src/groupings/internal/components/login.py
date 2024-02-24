@@ -6,6 +6,7 @@
 
 import sys
 import webbrowser
+import logging
 
 import gi
 
@@ -14,6 +15,7 @@ gi.require_version('Adw', '1')
 from gi.repository import Gtk, Adw
 
 from ..lang import lang
+from .. import oauth
 
 class LoginWindow(Adw.ApplicationWindow):
     def __init__(self, *args, **kwargs):
