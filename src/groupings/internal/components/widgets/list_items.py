@@ -17,6 +17,7 @@ global_token = None
 
 def get_token():
     """ Caches token so we don't have to ask the keyring for every widget """
+    global global_token
     if global_token != None:
         return global_token
     else:
@@ -27,9 +28,8 @@ class GroupListItem:
         """ Widget for a Group shown in the list """
         self.box = Gtk.Box.new(orientation=Gtk.Orientation.HORIZONTAL, spacing=4)
         # Avatar
-        global global_token
         self.avatar = Adw.Avatar(size=32, text=group.name)
-        avatar_filename = cache.fetch(global_token, group.image_url)
+        avatar_filename = cache.fetch(get_token(), group.image_url)
         if avatar_filename != None:
             self.texture_avatar = Gdk.Texture.new_for_pixbuf(
                     GdkPixbuf.Pixbuf.new_from_file(filename=avatar_filename)
@@ -84,8 +84,7 @@ class MessageListItem:
                 do_avatar = True
             if do_avatar:
                 self.avatar = Adw.Avatar.new(24, message.name, True)
-                global global_token
-                pfp = cache.fetch(global_token, message.avatar_url)
+                pfp = cache.fetch(get_token(), message.avatar_url)
                 if pfp != None and pfp != False:
                     self.texture_avatar = Gdk.Texture.new_for_pixbuf(
                         GdkPixbuf.Pixbuf.new_from_file(filename=pfp)
