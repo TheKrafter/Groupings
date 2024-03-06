@@ -62,6 +62,7 @@ def daemon(token: str, app: Gio.Application):
 def start_daemon(app: Gio.Application):
     """ Start Notification Daemon """
     token = get_token()
+    logging.info('Push daemon starting!')
     p = Process(target=daemon, args=(token, app,))
     p.start()
     return p
